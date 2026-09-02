@@ -1,0 +1,1078 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A simple, organized collection of Bible notes, reflections, Scripture studies, and Christian life notes.">
+<title>Bible Notes</title>
+<style>
+:root {
+  --bg: #f6f3ed;
+  --surface: #fffdf9;
+  --surface-2: #f0ebe2;
+  --text: #27251f;
+  --muted: #706b61;
+  --accent: #6b5b45;
+  --accent-dark: #4c4031;
+  --border: #ded7ca;
+  --shadow: 0 14px 35px rgba(54, 45, 34, .08);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.7;
+}
+button { font: inherit; }
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(246,243,237,.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  max-width: 1180px;
+  margin: auto;
+  min-height: 72px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text);
+  text-decoration: none;
+}
+.brand-mark {
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  font-size: 20px;
+}
+.brand-title { font-size: 1.15rem; font-weight: 700; }
+.menu-button {
+  width: 44px; height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.hamburger { width: 20px; display: grid; gap: 4px; }
+.hamburger span { height: 2px; width: 100%; background: var(--text); border-radius: 2px; }
+.layout {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+.hero {
+  min-height: 55vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 50px 0 70px;
+}
+.hero-inner { max-width: 760px; }
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  font-size: .75rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+.hero h1 {
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: .98;
+  margin: 18px 0;
+  font-weight: 500;
+}
+.hero p { color: var(--muted); font-size: 1.1rem; max-width: 620px; margin: auto; }
+.hero-actions { margin-top: 28px; }
+.primary {
+  display: inline-block;
+  padding: 11px 20px;
+  border-radius: 8px;
+  background: var(--accent-dark);
+  color: white;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+}
+.content-shell { position: relative; }
+.side-nav {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  width: 320px;
+  height: calc(100vh - 72px);
+  padding: 24px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  transform: translateX(-100%);
+  transition: transform .25s ease;
+  z-index: 15;
+  overflow-y: auto;
+}
+.side-nav.open { transform: translateX(0); }
+.nav-title {
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--muted);
+  margin: 4px 0 15px;
+}
+.nav-link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 10px 12px;
+  margin: 2px 0;
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+}
+.nav-link:hover, .nav-link.active { background: var(--surface-2); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.section-heading { margin-bottom: 28px; }
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--muted);
+  font-size: .75rem;
+  font-weight: 700;
+}
+.section-heading h2 {
+  margin: 6px 0 3px;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1.1;
+  font-weight: 500;
+}
+.section-heading p { color: var(--muted); margin: 0; }
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.note-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+}
+.note-card p { margin: 0; }
+.overlay {
+  position: fixed; inset: 72px 0 0;
+  background: rgba(39,37,31,.28);
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+  z-index: 10;
+}
+.overlay.show { opacity: 1; pointer-events: auto; }
+footer {
+  max-width: 1180px;
+  margin: 50px auto 0;
+  padding: 25px 24px;
+  color: var(--muted);
+  font-size: .9rem;
+  border-top: 1px solid var(--border);
+}
+
+.home-links {
+  max-width: 900px;
+  margin: 0 auto 30px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.home-link {
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: 38px 1fr 24px;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+.home-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  background: #fffefa;
+}
+.home-link.featured { grid-column: 1 / -1; }
+.home-link-icon {
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--surface-2);
+  font-size: 1.1rem;
+}
+.home-link strong { display: block; font-size: 1.05rem; }
+.home-link small { display: block; color: var(--muted); margin-top: 2px; font-size: .88rem; line-height: 1.45; }
+.arrow { color: var(--muted); font-size: 1.25rem; }
+
+@media (max-width: 700px) {
+  .layout { padding: 25px 16px 60px; }
+  .header-inner { padding: 0 16px; }
+  .hero { min-height: 48vh; }
+  .hero h1 { font-size: 3.3rem; }
+  .notes-grid { grid-template-columns: 1fr; }
+  .home-links { grid-template-columns: 1fr; }
+  .home-link.featured { grid-column: auto; }
+  .side-nav { width: min(88vw, 320px); }
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="#" onclick="showHome(event)">
+      <span class="brand-mark">✦</span>
+      <span class="brand-title">Bible Notes</span>
+    </a>
+    <button class="menu-button" id="menuButton" aria-label="Open navigation" aria-expanded="false">
+      <span class="hamburger"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<nav class="side-nav" id="sideNav" aria-label="Bible notes categories">
+  <div class="nav-title">Explore Notes</div>
+  <button class="nav-link active" data-target="home">Home</button>
+  <button class="nav-link" data-target="tab-0">Faith &amp; Trust</button>
+<button class="nav-link" data-target="tab-1">God &amp; His Character</button>
+<button class="nav-link" data-target="tab-2">Jesus Christ</button>
+<button class="nav-link" data-target="tab-3">Prayer, Worship &amp; Relationship With God</button>
+<button class="nav-link" data-target="tab-4">Sin, Repentance &amp; Forgiveness</button>
+<button class="nav-link" data-target="tab-5">Holiness, Obedience &amp; Discipleship</button>
+<button class="nav-link" data-target="tab-6">Wisdom &amp; Scripture</button>
+<button class="nav-link" data-target="tab-7">Mind, Emotions &amp; Identity</button>
+<button class="nav-link" data-target="tab-8">Love, Mercy &amp; Relationships</button>
+<button class="nav-link" data-target="tab-9">Suffering, Trials &amp; Perseverance</button>
+<button class="nav-link" data-target="tab-10">Money, Contentment &amp; Worldly Desires</button>
+<button class="nav-link" data-target="tab-11">Purpose, Calling &amp; Christian Life</button>
+<button class="nav-link" data-target="tab-12">Holy Spirit</button>
+<button class="nav-link" data-target="tab-13">Bible Studies &amp; Verses</button>
+<button class="nav-link" data-target="tab-14">Uncategorized / Review</button>
+</nav>
+<div class="overlay" id="overlay"></div>
+
+<main class="layout">
+  <section id="home" class="tab-panel active">
+    <div class="hero">
+      <div class="hero-inner">
+        <div class="kicker">Faith · Scripture · Reflection</div>
+        <h1>Bible Notes</h1>
+        <p>A simple place to explore thoughts, Scripture studies, prayers, and reflections organized around the Christian life.</p>
+      </div>
+    </div>
+
+    <div class="home-links">
+      <a class="home-link featured" href="#" data-target="tab-0">
+        <span class="home-link-icon">✦</span>
+        <span><strong>Faith & Trust</strong><small>Explore faith, hope, trust, and future grace.</small></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="home-link" href="#" data-target="tab-1">
+        <span class="home-link-icon">◈</span>
+        <span><strong>God & His Character</strong><small>Reflections on God's nature, promises, and faithfulness.</small></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="home-link" href="#" data-target="tab-2">
+        <span class="home-link-icon">†</span>
+        <span><strong>Jesus Christ</strong><small>Notes about Jesus, salvation, lordship, and following Him.</small></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="home-link" href="#" data-target="tab-3">
+        <span class="home-link-icon">⌁</span>
+        <span><strong>Prayer & Worship</strong><small>Prayer, worship, stillness, and relationship with God.</small></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="home-link" href="#" data-target="tab-4">
+        <span class="home-link-icon">◇</span>
+        <span><strong>Sin & Forgiveness</strong><small>Repentance, temptation, forgiveness, grace, and freedom.</small></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="home-link" href="#" data-target="tab-6">
+        <span class="home-link-icon">▤</span>
+        <span><strong>Wisdom & Scripture</strong><small>Bible study, wisdom, truth, discernment, and Scripture.</small></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="home-link" href="#" data-target="tab-7">
+        <span class="home-link-icon">♡</span>
+        <span><strong>Mind & Emotions</strong><small>Thoughts, fear, anxiety, identity, peace, and the inner life.</small></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="home-link" href="#" data-target="tab-8">
+        <span class="home-link-icon">∞</span>
+        <span><strong>Love & Relationships</strong><small>Love, mercy, kindness, family, friendship, and community.</small></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="home-link" href="#" data-target="tab-9">
+        <span class="home-link-icon">◌</span>
+        <span><strong>Trials & Perseverance</strong><small>Suffering, endurance, patience, struggles, and spiritual battles.</small></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="home-link" href="#" data-target="tab-13">
+        <span class="home-link-icon">✧</span>
+        <span><strong>Bible Studies & Verses</strong><small>Passages, verse studies, and Scripture references.</small></span>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </section>
+  <section id="tab-0" class="tab-panel" aria-labelledby="tab-0-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-0-title">Faith &amp; Trust</h2>
+              <p>71 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>Christian, God did not save you to start the race. He saved you so that you might finish the race.</p></article>
+<article class="note-card"><p>It’s not about more faith it’s about the right kind of faith. God give me the right kind of faith to praise you and worship you. To forgive others and to love the way you love.</p></article>
+<article class="note-card"><p>Jesus calls us to a living, relational trust in God rather than a mere intellectual belief. This right kind of faith is characterized by active obedience, complete dependence on His grace, and the courage to step out in love, as outlined throughout the teachings of the Gospels. stop thinking about how I can do it. Start thinking about how he is already done it. Rely on God and the impossible will be possible.</p></article>
+<article class="note-card"><p>Being a faithful servant to God is a fundamental responsibility to obtain contentment with Jesus.</p></article>
+<article class="note-card"><p>In emotional failure God offers forgiveness, purpose, and promise.</p></article>
+<article class="note-card"><p>Let’s learn to fight the battle of faith and future grace with the sword of the spirit. Cutting down any temptation, bad thoughts, hatred, and judgment, and even impatience.</p></article>
+<article class="note-card"><p>Hope is only enjoyed when you receive it with the faith given from God.</p></article>
+<article class="note-card"><p>Faith has to be personal.</p></article>
+<article class="note-card"><p>Be careful about your promises. Yes or No Trav</p></article>
+<article class="note-card"><p>I trust that my God will take care of me. He’s not my god because I said so it’s because he did.</p></article>
+<article class="note-card"><p>The way we pursue righteousness in love is to FIGHT for faith in future grace.</p></article>
+<article class="note-card"><p>By faith in Christ, we embrace him as our righteousness, and we embrace all that God promises to be for us, in him who is Jesus Christ.</p></article>
+<article class="note-card"><p>My greatest desire, is that we learn how to live for God‘s honor, and that means living by faith and future grace, which in turn means battling unbelief and all the ways it rears its ugly head, including covetousness.</p></article>
+<article class="note-card"><p>The Key to patience is holding out by the promises of Jesus. this is Holding onto faith in future grace.</p></article>
+<article class="note-card"><p>The path to faithfulness is almost never a straight line.</p></article>
+<article class="note-card"><p>God, you see the full picture and I don’t. Patience is trusting that you see the full picture. an inconvenience could actually be a blessing from you in disguise.</p></article>
+<article class="note-card"><p>I am putting expectations on myself. That’s why I overthink that’s why I worry I’m doing wrong. My body is stuck in this loop. Please God get me out. I trust that you will and I thank you for your strength. So I put all my expectations on you. I will always come up short, but you cover it all amen.</p></article>
+<article class="note-card"><p>Contentment is a feeling of peaceful satisfaction that The living God has given us. This feeling of peace is only given to us by God and nothing else. So if we try and replace with something else, it will only feel hollow.</p></article>
+<article class="note-card"><p>Faith is the experience of contentment in Jesus. The fight of faith is the fight to keep your heart contented with Jesus. Really believe and keep on believing that he will meet every need and satisfy every longing.</p></article>
+<article class="note-card"><p>&quot;I believe in Christianity as I believe that the Sun has risen: not only because I see it, but because by it I see everything else.&quot; - cs lewis. I was blind and now I see.</p></article>
+<article class="note-card"><p>Let go of all the outcomes. trust the father.</p></article>
+<article class="note-card"><p>Believe in God and all your heart and carry his commandments with you.</p></article>
+<article class="note-card"><p>Jesus is in the business of producing faith in people that will endure.</p></article>
+<article class="note-card"><p>Contentment with God will keep you away from all of the sin.</p></article>
+<article class="note-card"><p>Consistent contentment with God is what we all need. I trust you.</p></article>
+<article class="note-card"><p>Can’t doubt yourself without doubting the work he’s put into you.</p></article>
+<article class="note-card"><p>“Count it all joy, my brothers, when you meet trials of various kinds, for you know that the testing of your faith produces steadfastness.”</p></article>
+<article class="note-card"><p>Hope in the steadfast love of the Lord:)</p></article>
+<article class="note-card"><p>Obedience can be forced, but trust has to be built</p></article>
+<article class="note-card"><p>Our hope rest in every promise behind God</p></article>
+<article class="note-card"><p>No one sins out of duty.we sin because it offers some promise and happiness,that promise enslaves us.</p></article>
+<article class="note-card"><p>Whoever believes in him will not be put to shame.</p></article>
+<article class="note-card"><p>Battle shame with the promises of God. and god promises forgiveness</p></article>
+<article class="note-card"><p>He will guard me until the day he has entrusted me</p></article>
+<article class="note-card"><p>His promises cover all my little and big mistakes</p></article>
+<article class="note-card"><p>It is not my shame to bear. no way. no more of those ridiculous things i keep thinking. THEY ARE NOT MY SHAME TO BEAR, BUT THE SON OF THE LIVING GOD ALREADY PROMISED IT AWAY</p></article>
+<article class="note-card"><p>If you hold a grudge, then you doubt the judge. Let’s not hold grudges because God promised that he will be the ultimate judge that he will be the ultimate vengeance. It is in his hands.</p></article>
+<article class="note-card"><p>He who has a cool spirit has much understanding. Remain calm and trust God. That what it always goes back to.</p></article>
+<article class="note-card"><p>Hope in God is my fuel.</p></article>
+<article class="note-card"><p>Surrendering to the Lord isn’t losing control of your life. But trusting the one who sees the full picture.</p></article>
+<article class="note-card"><p>Jesus promises that he is never going to leave me. He is with me right now, and he will never leave me, my best friend.</p></article>
+<article class="note-card"><p>And that answer is contentment with Jesus.</p></article>
+<article class="note-card"><p>I receive all the words that God has given me with faith. Faith that I will remember it and everything will be OK. Because of his wonderful promises.</p></article>
+<article class="note-card"><p>Whenever we sense, the slightest rise of covetousness in our hearts, we must turn on it and fight it with all of our might using the weapons of faith.</p></article>
+<article class="note-card"><p>I trust your righteousness even when i do not understand</p></article>
+<article class="note-card"><p>Trust his infinite understanding</p></article>
+<article class="note-card"><p>The Lord God has the future in his hands. that is faith in future grace</p></article>
+<article class="note-card"><p>Faith within future grace is coming.</p></article>
+<article class="note-card"><p>“For through the Spirit, by faith, we ourselves eagerly wait for the hope of righteousness.”</p></article>
+<article class="note-card"><p>This is a great example of faith in future Grace</p></article>
+<article class="note-card"><p>Bitterness cannot survive the contentment and confidence and fullness of joy that came from satisfaction, and the forgiving God of future grace - john piper</p></article>
+<article class="note-card"><p>Grant me future grace, Lord God. Put strong influences on my heart to give me an appetite for your truth. And that truth breaks the power of my appetite for worldly things.</p></article>
+<article class="note-card"><p>* i trust. no matter the outcome</p></article>
+<article class="note-card"><p>Strength from the promises of God</p></article>
+<article class="note-card"><p>Sometimes God will take time to develop in people. Just rely on him. I can’t do anything without Jesus and his grace. So no more saying “I have more to do. “ that is up to God. Remember faith in future grace. That is where my strength comes from.</p></article>
+<article class="note-card"><p>Impatient complaining is a form of unbelief.</p></article>
+<article class="note-card"><p>I agree I’ve been saved by faith and this is a gift from God.</p></article>
+<article class="note-card"><p>Patience doesn’t earn salvation. But it’s a fruit that’s included in future grace.</p></article>
+<article class="note-card"><p>“The word” conquers unbelief, and it is supported by faith in the future grace</p></article>
+<article class="note-card"><p>Sometimes faith looks like a fight.</p></article>
+<article class="note-card"><p>Fighting the world means remaining faithful to Jesus over the course of my life.</p></article>
+<article class="note-card"><p>God will empower me to finish my strength journey well. just ask and believe.</p></article>
+<article class="note-card"><p>Lord God help me walk with peace and humility with other believers.</p></article>
+<article class="note-card"><p>A stronghold is a false premise that denies God’s promise.</p></article>
+<article class="note-card"><p>Miracles don’t produce faith. Faith produces miracles.</p></article>
+<article class="note-card"><p>First century Christians desperately needed each other and they knew it. Modern day believers need each other, but have forgotten it.</p></article>
+<article class="note-card"><p>Me? Hope in God; for I shall again praise him,my salvation and my God.</p></article>
+<article class="note-card"><p>There is no turning back when you receive that truth. Real biblical truth. The faith in your heart will lead to obedience. Trust in God and he will give you that faith. Given a little mustard seed of faith can move a mountain.</p></article>
+<article class="note-card"><p>The stronger, the faith, the more Satan will storm its fortress.</p></article>
+<article class="note-card"><p>The believer who endures patiently and depends upon the Lord through the difficulty is promised to receive the crown of life.</p></article>
+<article class="note-card"><p>And so the unbeliever down the road may get away with murder, but God brings His heavy hand down upon you for one piece of gossip. Don’t be angry. It’s a sign that you are a child of God. He will not stop chipping away at our sinful character until He sees Christ, His only begotten Son.</p></article></div>
+        </section>
+<section id="tab-1" class="tab-panel" aria-labelledby="tab-1-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-1-title">God &amp; His Character</h2>
+              <p>188 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>Even though my steps forward aren’t the best, they are still steps forward. Thank God for loving me and understanding.</p></article>
+<article class="note-card"><p>Weakness is not the end of us. It’s the beginning of God’s might within us.</p></article>
+<article class="note-card"><p>The love of the Lord God, triumphs over every societal law made by man.</p></article>
+<article class="note-card"><p>God is so peaceful. Be peaceful to everyone else, show others the peace of God through how you act. God, I can’t do it without your strength.</p></article>
+<article class="note-card"><p>The spirit of your body is the life that God has provided.</p></article>
+<article class="note-card"><p>God’s grace does not mean you can pass all immorality. You still have to make decisions and choose God. That’s what he gave us choices for.</p></article>
+<article class="note-card"><p>Sometimes my best, is just getting up in the morning. but God willing, I’m still going to shoot for the stars.</p></article>
+<article class="note-card"><p>God does not have favorites he has specifics.</p></article>
+<article class="note-card"><p>I want God to become greater while I become less.</p></article>
+<article class="note-card"><p>I don’t need to prove who I am because I’m already Jesus’s son. The devil will try and tell me I’m not worth it and I have to prove myself, but God already paid for it. I am his.</p></article>
+<article class="note-card"><p>“Show hospitality to one another without grumbling. As each has received a gift, use it to serve one another, as good stewards of God’s varied grace:”</p></article>
+<article class="note-card"><p>“for my eyes have seen your salvation that you have prepared in the presence of all peoples, a light for revelation to the Gentiles, and for glory to your people Israel.””</p></article>
+<article class="note-card"><p>Freedom doesn’t come from doing whatever we want. but from living according to the spirit of God who lives within us. That’s why we feel so hollow doing worldly things.</p></article>
+<article class="note-card"><p>Leave a path for God in my heart.</p></article>
+<article class="note-card"><p>Favoritism has problems. We are all equal under God. It’s not fair to hold someone else to higher standards than others. Even ourselves.</p></article>
+<article class="note-card"><p>God’s love isn’t based on my usefulness. It’s based on his faithfulness.</p></article>
+<article class="note-card"><p>Let god anchor me down to make my heart softer</p></article>
+<article class="note-card"><p>When I ignore God, it’s stubbornness.</p></article>
+<article class="note-card"><p>Don’t give up on someone. God never gave up on us.</p></article>
+<article class="note-card"><p>NEED GODS STRENGTH FOR THAT.</p></article>
+<article class="note-card"><p>Stop being stuck in what was, can’t do it without God</p></article>
+<article class="note-card"><p>Total devotion to God is the highest expression of love.</p></article>
+<article class="note-card"><p>The future is in you hands Lord god.</p></article>
+<article class="note-card"><p>Ungodly = without god</p></article>
+<article class="note-card"><p>Moment by moment, Grace arrives to enable us to do every good work that God appoints for us.</p></article>
+<article class="note-card"><p>I am tired of casting up the foam of my own shame. Live free. God has paid for it all.</p></article>
+<article class="note-card"><p>Whether you choose to follow him or not, you will always end up in God’s hand.</p></article>
+<article class="note-card"><p>God is a god of “and suddenly”</p></article>
+<article class="note-card"><p>If love is the foundation of who we are, then God can easily transform us to his will.</p></article>
+<article class="note-card"><p>Today, my friend Carter approached me and he could tell I was a Christian from the way I acted. I thought that was so motivating. It made me so happy to see what God was doing in me. I am very grateful to him. I didn’t do anything. It was all God. I just feel fulfilled. And it is amazing feeling. Thank you, God.</p></article>
+<article class="note-card"><p>Do you get in the shower to get clean or do you get clean to get in the shower? God doesn’t want you clean right now. He wants you as you are. God does the cleaning, he wipes your sins away.</p></article>
+<article class="note-card"><p>If God does the greater,than doing the lesser is all the more sure</p></article>
+<article class="note-card"><p>It’s not good to be comfortable while divided</p></article>
+<article class="note-card"><p>Give god your time</p></article>
+<article class="note-card"><p>Time is one of the most valuable gifts that God has given us. And he wants it. Because he loves us so much.</p></article>
+<article class="note-card"><p>Let’s process our emotions. don’t just bypass it away. Give God the truth and figure it out.</p></article>
+<article class="note-card"><p>I idolize MY PHONE way too much. God help me please.</p></article>
+<article class="note-card"><p>Propping other people above you in a godly way. Just not above God.</p></article>
+<article class="note-card"><p>With the strength of god I will keep fighting for my life.</p></article>
+<article class="note-card"><p>Sometimes going into a conversation, people already have a conclusion. It’s hard to get through people who don’t want to hear. I often felt this way with my mother. Thank you, God for dealing with the situation. you are my strength Lord God.</p></article>
+<article class="note-card"><p>We are given the power to be sons of God.</p></article>
+<article class="note-card"><p>We can do anything within God’s will.</p></article>
+<article class="note-card"><p>Let’s be adopted by our Lord God. LET GO OF THE PAIN OF THE PAST! with God’s ultimate LOVE AND STRENGTH!</p></article>
+<article class="note-card"><p>God has a way of lifting up the lowly and humbling the high.</p></article>
+<article class="note-card"><p>Lord God give me ways so my heart can be contended with you.</p></article>
+<article class="note-card"><p>I feel this first when I’m around worldly things. When people do worldly things and they think they’re fine. What used to be joy, now it is gloom. Inappropriate jokes used to be funny. But now I just feel bad. And I pray for those who are lost. please Lord God lead us and help us all. Amen.</p></article>
+<article class="note-card"><p>Pray that God puts my feelings in his infinite wisdom.</p></article>
+<article class="note-card"><p>In your infinite wisdom, Lord, I’m letting it go</p></article>
+<article class="note-card"><p>Name that worry to God and give it to him before you go to sleep. Name that worry out loud and let him bear the weight.</p></article>
+<article class="note-card"><p>If God is with me who is against me.</p></article>
+<article class="note-card"><p>We are nothing without God, but our lives are worth everything when we walk with God.</p></article>
+<article class="note-card"><p>It’s about less than what I do and more about leaning all the way into God. Relying on him 100%. Obviously you can’t do that 100% but you can try. Jesus wants a trier not a cryer.</p></article>
+<article class="note-card"><p>I am loved. I am worth it. I am strong because God is with me.</p></article>
+<article class="note-card"><p>Mercy. God has mercy.</p></article>
+<article class="note-card"><p>God is going to get it right for me</p></article>
+<article class="note-card"><p>God willing I Stay consistent in the word</p></article>
+<article class="note-card"><p>If God is with me who is against me.</p></article>
+<article class="note-card"><p>Attributing worth to God.</p></article>
+<article class="note-card"><p>He is so worthy.</p></article>
+<article class="note-card"><p>God’s approval doesn’t change. He always loves me. And everyone else.</p></article>
+<article class="note-card"><p>Nothing compares to the scope of God’s love. Let others opinions go. his is the one that matters. that includes my own opinion.</p></article>
+<article class="note-card"><p>Pleasing God, matters more than pleasing people. but don’t demean a person to the point of destruction.</p></article>
+<article class="note-card"><p>Give me strength Lord God</p></article>
+<article class="note-card"><p>It’s by trying your best. specially through God. (even though God’s love isn’t earned,he has given his love to us) the point is to try your best within the love of god.</p></article>
+<article class="note-card"><p>Don’t let the silence/noise in your head destroy you. Please help me God.</p></article>
+<article class="note-card"><p>It may seem like silence and loneliness, but God is always there.</p></article>
+<article class="note-card"><p>Steadfastness is a deep commitment to God and his purposes.</p></article>
+<article class="note-card"><p>If I’m too afraid to do anything in my life I’ll look back and I will just have let it slip through my fingers. Rely on God for strength he will give me the weights.</p></article>
+<article class="note-card"><p>In the moment you don’t feel God at all, could be the closest he’s ever been to you. billy Graham.</p></article>
+<article class="note-card"><p>Please Lord God help me make my desire grow for you!</p></article>
+<article class="note-card"><p>Pray for strength and God will give you the weights</p></article>
+<article class="note-card"><p>The power of patience flows through faith and future, within the sovereign grace of God.</p></article>
+<article class="note-card"><p>The battle is evidence, that God is working on you.</p></article>
+<article class="note-card"><p>Leave room for God to work.</p></article>
+<article class="note-card"><p>God willing it will be better.</p></article>
+<article class="note-card"><p>Wisdom is delighting in the children of men.</p></article>
+<article class="note-card"><p>The goal isn’t to be perfect and stop sinning but to rely on God. keep your eyes on the finish line.</p></article>
+<article class="note-card"><p>And wisdom is fearing the Lord.</p></article>
+<article class="note-card"><p>Be diligent in the love of God. good things will follow.</p></article>
+<article class="note-card"><p>I want to follow God for the wonderful things and love he has shown me.</p></article>
+<article class="note-card"><p>Humility is the one road back to God.</p></article>
+<article class="note-card"><p>The only way to win a battle with God is submit to his will.</p></article>
+<article class="note-card"><p>Resist the devil and he will flee. He will attack me when my back is turned. Use God as that weapon.</p></article>
+<article class="note-card"><p>It is not right to put worldly desires above, people made in God’s image. Which is everyone.</p></article>
+<article class="note-card"><p>Grace does arithmetic that logic cannot explain</p></article>
+<article class="note-card"><p>When you don’t trust God, it’ll hold you back and keep you quiet from sharing the good news.</p></article>
+<article class="note-card"><p>When being shamed is the perfect opportunity to bring glory to God.</p></article>
+<article class="note-card"><p>Most of our shame is self-centered and not God Centered. Just about all of My shame is self-centered.</p></article>
+<article class="note-card"><p>When I sin, that is when I need God the most.</p></article>
+<article class="note-card"><p>God also indicates by using Paul,that homosexuality is a sign that people are heading in the opposite direction of God</p></article>
+<article class="note-card"><p>Be honest with God when you sin.</p></article>
+<article class="note-card"><p>It’s important to change my environment. i am putting myself in an environment that is making me sin. god willing please help me out of it.</p></article>
+<article class="note-card"><p>Don’t be ashamed, be encouraged When God gives you the strength. don’t feel bad that you can’t do it on your own. Be happy that he gave you strength.</p></article>
+<article class="note-card"><p>God asks us to aim for the “mark”. But we all miss it. Still and for the mark and Jesus will cover the rest.</p></article>
+<article class="note-card"><p>Sin prevents us from being the person that God wants us to be.</p></article>
+<article class="note-card"><p>Give all your distractions to God. And worship</p></article>
+<article class="note-card"><p>Stillness is key. slow down. Be still and know that he is God.</p></article>
+<article class="note-card"><p>Give all glory to the Lord our God. Everything I do.</p></article>
+<article class="note-card"><p>Putting God above family.</p></article>
+<article class="note-card"><p>God willing.</p></article>
+<article class="note-card"><p>What currently feels impossible? Remember, impossible is where God begins.</p></article>
+<article class="note-card"><p>Wisdom can elevate far beyond you’re starting position.God will make it better.</p></article>
+<article class="note-card"><p>It’s important to remember when you sin to emphasize that God&#x27;s overarching grace covers your past, present, and future mistakes, actively confessing and repenting keeps your heart aligned with His will.</p></article>
+<article class="note-card"><p>God, you don’t need my help, but you want my heart and those are too very different things.</p></article>
+<article class="note-card"><p>I don’t have to pray and micromanage every detail. Lord God can handle that.</p></article>
+<article class="note-card"><p>Disappointment requires surprise. God is not surprised. he knows everything you’re going to do and he still loves you.</p></article>
+<article class="note-card"><p>God writes a comedy and we turn it into a drama. It is not that serious.</p></article>
+<article class="note-card"><p>The mouth speaks from the overflow of the heart. make sure to filter out the things. the evil things that are trying to flow from your heart. Please God help me.</p></article>
+<article class="note-card"><p>Don’t have two mouths. One mouth should be consistent with the love of Jesus. Don’t go praise God with my mouth and then talk bad about someone later. Praise God fully and don’t talk bad about someone.</p></article>
+<article class="note-card"><p>No one can know God is their comforter unless they are uncomfortable.</p></article>
+<article class="note-card"><p>God always has our best in mind.</p></article>
+<article class="note-card"><p>God has not changed and his will has not changed</p></article>
+<article class="note-card"><p>It’s not my money it’s God’s money</p></article>
+<article class="note-card"><p>Salvation doesn’t mean the battle ends. It just means the battle is noticed before God.</p></article>
+<article class="note-card"><p>The anxiety that I’m feeling while I’m praying is from the devil. Not from God.</p></article>
+<article class="note-card"><p>God’s glorious might is at which patience submits under. and patience is one of the fruits of the spirit.</p></article>
+<article class="note-card"><p>I submit myself and the weights that i have been carrying to you Lord god. the strongest man i know.</p></article>
+<article class="note-card"><p>God willing i encourage and motivate.</p></article>
+<article class="note-card"><p>God willing i protect others.</p></article>
+<article class="note-card"><p>And i love god with all of my being.</p></article>
+<article class="note-card"><p>God is going to correct his people when you do wrong.</p></article>
+<article class="note-card"><p>Nothing can win against god’s overwhelming power.</p></article>
+<article class="note-card"><p>We don’t obey to become a child of God we obey because we already are one.</p></article>
+<article class="note-card"><p>In moments of confusion and anger. remember;God can use evil for good.</p></article>
+<article class="note-card"><p>It’s important to know things(in the Bible), but doing them is the ultimate goal. god will give me strength and understanding to do it</p></article>
+<article class="note-card"><p>Fear of the Lord - approaching god with respect, love and understanding. That is an Understanding that has only been given to you by the Holy Spirit. With that, believing in God with all your heart.</p></article>
+<article class="note-card"><p>I’m done trying my best. It’s time to give it all to God. Everything.</p></article>
+<article class="note-card"><p>Keep going, don’t give up and rely on God to keep building that grit.</p></article>
+<article class="note-card"><p>The truth is, sin isn’t right. And God died to cover it all</p></article>
+<article class="note-card"><p>Don’t use ignorance as an excuse. Do the right thing in the name of the good Lord,rely on his strength in everything.</p></article>
+<article class="note-card"><p>Even when enemies and figures of hate crumble and fall do not rejoice in their failure, but be like God and provide them with love. The Lord does not want to see somebody who takes joy in the wrong things.</p></article>
+<article class="note-card"><p>Livelihood before comfort. God is my livelihood rely on his foundations before I rely on the comfort of the world. I need him to survive.</p></article>
+<article class="note-card"><p>If Jesus is grace and truth. And the word was God. Then the word must be true and Jesus is who he says he is.</p></article>
+<article class="note-card"><p>Lower your expectation of how he will speak to you. Because he is already speaking to you. Sometimes I expect fireworks but my wonderful God is talking in quiet whispers</p></article>
+<article class="note-card"><p>Silence is the room that God will meet you in.</p></article>
+<article class="note-card"><p>Five minutes of silence with God. Right in the morning.</p></article>
+<article class="note-card"><p>Arrogant people hurt people. Humble people help people. God, please give me strength and humble me so I can help others.</p></article>
+<article class="note-card"><p>Be encouraging to one another. God willing</p></article>
+<article class="note-card"><p>God, be merciful to me, i am a sinner.</p></article>
+<article class="note-card"><p>Don’t jump in the deep end knowing you can’t swim. Rely on God for the wisdom of not knowing and don’t do things you know you can’t handle.</p></article>
+<article class="note-card"><p>If you will obey what God has already made clear. he will make clear what is unclear.</p></article>
+<article class="note-card"><p>“and fight the good fight boys”. cannen</p></article>
+<article class="note-card"><p>Stop being scared about my next step. God is already HERE.</p></article>
+<article class="note-card"><p>When God is asking you to do something, he is assuming responsibility towards me.</p></article>
+<article class="note-card"><p>Take those thoughts captive. Those negative angry thoughts only attacking you. Those thoughts are Not God. God is quiet, patient and so soothing.</p></article>
+<article class="note-card"><p>No one knows the wonderful things that God has done unless you tell them about it.</p></article>
+<article class="note-card"><p>Fight the good fight is an eternal choice.</p></article>
+<article class="note-card"><p>Therefore, the imitators of God as beloved children. and walk in love as Christ loved us and gave himself up for us. Ephesians four and five.</p></article>
+<article class="note-card"><p>Savor the truth of God’s forgiveness.</p></article>
+<article class="note-card"><p>Don’t let sin and sinful thoughts grow. if you let it grow it WILL get out of control give it to God.</p></article>
+<article class="note-card"><p>I’ll give thanks to you, you are good, God your love endures forever.</p></article>
+<article class="note-card"><p>Right now, reflect on your life and thank God for His eternal goodness. Nothing you have faced or will ever face is too much for</p></article>
+<article class="note-card"><p>The God who loves you and died for you.</p></article>
+<article class="note-card"><p>Bring Him your concerns, surrender your expectations, and allow Him to reveal the evidence of His goodness in your life.</p></article>
+<article class="note-card"><p>Jesus is the evidence of goodness in my life.</p></article>
+<article class="note-card"><p>Lord God I pray that there is failure in the sin that i have sown in people.</p></article>
+<article class="note-card"><p>God does not say Travis break your bad habit. He says Travis I have broken the bad habits of your life, receive the blessings of my victory. It’s already won.</p></article>
+<article class="note-card"><p>Do not speak the language of impossibility. ex: God could never forgive me. That is the language of impossibility. It’s false. God forgives everything and we can live in freedom. Nothing is too big or too much for God.</p></article>
+<article class="note-card"><p>Keep walking. For all you know, this may be the days the walls come down. You may only be steps from a moment like the walls of Jericho falling. Be patient and be steadfast, the love of God.</p></article>
+<article class="note-card"><p>God offers a piece that the world cannot give.</p></article>
+<article class="note-card"><p>One of the primary ways we experienced God’s love is through loving one another.</p></article>
+<article class="note-card"><p>God bears your burdens, meets your needs and heals you often through other people</p></article>
+<article class="note-card"><p>Every day that we wake up, God blesses us with His grace. Surrender begins by recognizing that our whole life belongs to Jesus. It&#x27;s not a one-time act but a daily offering.</p></article>
+<article class="note-card"><p>As Christians, we must remember that everything we do, big or small, we do unto God.</p></article>
+<article class="note-card"><p>Every time you find yourself anxious, take a moment to pause and pray. Be honest with God and tell Him exactly how you&#x27;re feeling and thinking in that moment.</p></article>
+<article class="note-card"><p>Remember that God is always in control, and always present with you.</p></article>
+<article class="note-card"><p>Right now, reflect on your life and thank God for His eternal goodness. Nothing you have faced or will ever face is too much for</p></article>
+<article class="note-card"><p>The God who loves you and died for you.</p></article>
+<article class="note-card"><p>Bring Him your concerns, surrender your expectations, and allow Him to reveal the evidence of His goodness in your life.</p></article>
+<article class="note-card"><p>The day you hand the wheel to God is the day you find rest.</p></article>
+<article class="note-card"><p>God’s power cannot be matched, and when we hide behind Jesus, we have a new power to resist the Devil.</p></article>
+<article class="note-card"><p>Please God surround me in your love and your Glory. You are worthy</p></article>
+<article class="note-card"><p>We must talk to ourselves instead of allowing ourselves to talk to us. When that thought comes that temptation or worry, fight it with the grace of God don’t sit down in the dark.</p></article>
+<article class="note-card"><p>Not anyone else’s plans or ideas but God’s plan.</p></article>
+<article class="note-card"><p>Choices that seem wise in the world’s eyes are very often anti-God.</p></article>
+<article class="note-card"><p>With every decision we make, we should ponder the question, Is this good for my soul?</p></article>
+<article class="note-card"><p>God, please forgive me for worrying because I know you will always make a way.</p></article>
+<article class="note-card"><p>We are more than just conquerors, we are children of God.</p></article>
+<article class="note-card"><p>God I thank you today that you are an awesome God. You made the heavens and earth and yet you hear us. I ask that you would help us to keep from sin and to look to you when we are in need, knowing that you are our protector and provider. Lord let us draw closer to you and be strengthened to walk worthy of your Spirit. Amen</p></article>
+<article class="note-card"><p>It is the grace of God that we feel the weight of our sins</p></article>
+<article class="note-card"><p>Feelings are a good servant, but not a master</p></article>
+<article class="note-card"><p>It is by his power that makes the way of grace possible. The power of God.</p></article>
+<article class="note-card"><p>I want to obey God to please him.</p></article>
+<article class="note-card"><p>If you try to do godly things without God. It’s a contradiction.</p></article>
+<article class="note-card"><p>Lord God give me strength to help me let you, help me.Please give me wisdom And show me how.</p></article>
+<article class="note-card"><p>Habitual sin won’t cause us to[ lose our salvation](https://www.gotquestions.org/Christian-lose-salvation.html) or keep us out of heaven, but it can hinder our fellowship with God if we don’t humbly confess and continually seek restoration.</p></article>
+<article class="note-card"><p>“For the Lord disciplines the one he loves, and chastises every son whom he receives.” It is for discipline that you have to endure. God is treating you as sons. For what son is there whom his father does not discipline?”</p></article>
+<article class="note-card"><p>God is good</p></article></div>
+        </section>
+<section id="tab-2" class="tab-panel" aria-labelledby="tab-2-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-2-title">Jesus Christ</h2>
+              <p>95 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>Believe in the name: To love Christ as savior and have obedience to him as Lord. John MacArthur.</p></article>
+<article class="note-card"><p>Jesus, those judging thoughts are not from you.</p></article>
+<article class="note-card"><p>The evidence of Jesus’s teachings are the lives that are changed by it.</p></article>
+<article class="note-card"><p>Do the right thing and help people like Jesus would!</p></article>
+<article class="note-card"><p>If Jesus can write perfect stories. Then he can write mine</p></article>
+<article class="note-card"><p>Jesus has empowered you to partner with him as we experience the greatest story in earth.</p></article>
+<article class="note-card"><p>Pray:Today, Jesus please help me see myself the way you see me.</p></article>
+<article class="note-card"><p>Jesus wants a tryer not a cryer</p></article>
+<article class="note-card"><p>I was never meant to sit on the throne. peace begins the moment you get off of the throne and let Jesus sit on it and let him be king. The king of my life.</p></article>
+<article class="note-card"><p>Jesus, I am now letting you take over the throne of my mind.</p></article>
+<article class="note-card"><p>Where the spirit of the Lord is, there is freedom as well</p></article>
+<article class="note-card"><p>I think this is wonderful and brilliant. God is using Simeon to convey a message. Simeon is a great example of what being devoted can lead you to. He quite literally was used to transfer a message. Saying that Jesus Christ is what sets the Gentiles free from sin. And what gives light to the people of Israel. Eventually, we will all be under the Lord, our God and I am so excited. Remember devoted doesn’t mean perfect. It means to rest in God’s love and hold onto the strength that he always provide, even when you fail. Amen.</p></article>
+<article class="note-card"><p>You see, the world, as blind and immoral as it is, still holds up a standard to the Christian and when we don’t meet that standard they will soon let you know. So remember, wherever you go you are an ambassador for Christ.</p></article>
+<article class="note-card"><p>“Keep your life free from love of money, and be content with what you have, for he has said, “I will never leave you nor forsake you.” So we can confidently say, “The Lord is my helper; I will not fear; what can man do to me?””</p></article>
+<article class="note-card"><p>“Not that I am speaking of being in need, for I have learned, in whatever situation I am, to be content. I know how to be brought low, and I know how to abound. In any and every circumstance, I have learned the secret of facing plenty and hunger, abundance and need. I can do all things through him who strengthens me.”</p></article>
+<article class="note-card"><p>The kingdom of heaven is like a growth that we cannot imagine. It is forever growing in us and it is wonderful thank you Jesus.</p></article>
+<article class="note-card"><p>Jesus says is</p></article>
+<article class="note-card"><p>Take captive every thought and submit it under the control of Jesus.</p></article>
+<article class="note-card"><p>Show everyone Mercy because the Lord Jesus showed everyone else mercy. Doesn’t matter who it is.</p></article>
+<article class="note-card"><p>Christians who judge others and call themselves Christians are in fact, actually the bad Christians. this might be the truth, but this doesn’t mean love them less. Love them like Jesus would.</p></article>
+<article class="note-card"><p>You know what devil. THE LORD REBUKE YOU, let the Lord handle it.</p></article>
+<article class="note-card"><p>Thank you Jesus, for covering it all.</p></article>
+<article class="note-card"><p>Put to death, the deeds of the body, and rely on the strength of Jesus Christ.</p></article>
+<article class="note-card"><p>Look at both sides of the situation understanding love like Jesus would. And if you’re worried that they don’t have Jesus. Tell them about him.</p></article>
+<article class="note-card"><p>Christ like covenantal love demands relational tenacity. never give up.</p></article>
+<article class="note-card"><p>Everything good comes from a basis of Jesus Christ. The firm foundation. an oasis of water that is spewing for love and knowledge.</p></article>
+<article class="note-card"><p>It’s Jesus and he’s covered it all.</p></article>
+<article class="note-card"><p>And that is Jesus</p></article>
+<article class="note-card"><p>Lord i can’t do this without you,</p></article>
+<article class="note-card"><p>Feeling farther away from the Lord?</p></article>
+<article class="note-card"><p>Maybe you have swapped a place IN your heart with worldly desires, out with a place in your heart that Jesus DESERVES.</p></article>
+<article class="note-card"><p>The Lord Jesus governs the good that befalls us all</p></article>
+<article class="note-card"><p>Even if we die, we conquer. And death ends up serving our best interests. Which is seeing Jesus.</p></article>
+<article class="note-card"><p>Jesus is always found at his father’s home.</p></article>
+<article class="note-card"><p>I will stand in for those who are being controlled who are being manipulated. Those who felt weak those were told that they can’t do anything that they’re evil and horrible. They are not any of those things. God created them. And with the strength from Jesus Christ, I will protect them. Protect those who cannot speak up. i’ve never been more sure about anything in my life.</p></article>
+<article class="note-card"><p>Lord, I don’t have the words to say but I’m here in your presence and I need your help.</p></article>
+<article class="note-card"><p>My identity is not in what I have done,but it is in who Jesus says I am!</p></article>
+<article class="note-card"><p>Jesus loves me. So I love me. I embrace his love and I show others that love he has shown me.</p></article>
+<article class="note-card"><p>Following Jesus isn’t about the past it’s about the future.</p></article>
+<article class="note-card"><p>Thank you, Lord</p></article>
+<article class="note-card"><p>I love you, Jesus</p></article>
+<article class="note-card"><p>Jesus holds the future</p></article>
+<article class="note-card"><p>As long as you are looking down, you can’t see someone above you.</p></article>
+<article class="note-card"><p>“Lord willing”</p></article>
+<article class="note-card"><p>Jesus is my home.</p></article>
+<article class="note-card"><p>When I judge other Christians around me for not having the same standards as me. It’s denying them the freedom of Jesus. because when I sinned and I was out of line Jesus didn’t judge me he forgave me.</p></article>
+<article class="note-card"><p>Jesus died for the worst version of myself, that I hate the most.</p></article>
+<article class="note-card"><p>Humble yourself before the Lord don’t destroy yourself</p></article>
+<article class="note-card"><p>The strength of the Lord is there. just have to grab on to it</p></article>
+<article class="note-card"><p>Jesus sets us free from that enslavement, of a false happiness.</p></article>
+<article class="note-card"><p>He will forgive you. Thank you Lord.</p></article>
+<article class="note-card"><p>Lord, I must remember if I’m worried about giving money to an irresponsible person. Or anything. That you give me money all the time when you know I’m going to be irresponsible with it. I think it’s beautiful.</p></article>
+<article class="note-card"><p>You won’t find peace where the presence of the Lord isn’t.</p></article>
+<article class="note-card"><p>God is never going to forget his promise even across generations. Jesus is a part of the lineage of king David.</p></article>
+<article class="note-card"><p>I am blessed because the Lord Jesus is with me.</p></article>
+<article class="note-card"><p>Transformation comes from looking at Christ.</p></article>
+<article class="note-card"><p>Stop focusing on someone else’s spiritual journey. Making comparisons about whether you’re better or they’re better than you. Focus on your own journey with God keep your eyes on Jesus. Both of those comparisons are terrible and a sin. Thank you, God.</p></article>
+<article class="note-card"><p>That is you Jesus.</p></article>
+<article class="note-card"><p>We are dirt. people walk on dirt and spit on it, but with the right gardener dirt can produce beautiful things. thank you Jesus for being my gardener.</p></article>
+<article class="note-card"><p>Thank you, Jesus</p></article>
+<article class="note-card"><p>“Many are the plans in the mind of a man, but it is the purpose of the Lord that will stand.”</p></article>
+<article class="note-card"><p>Real change is in Christ. if you want to change someone for the better, it is committing to someone and living life with them with Jesus</p></article>
+<article class="note-card"><p>I want a hunger for righteousness. which can only be given from Jesus.</p></article>
+<article class="note-card"><p>Lord i need you to take this.</p></article>
+<article class="note-card"><p>My food comes from the well of the one who created me, God created me, and God is Jesus Christ.</p></article>
+<article class="note-card"><p>I make fun of myself because that’s all I’ve ever done. That’s all I know how to do. Help me, Jesus change my heart and realize the worth that you’ve given me.</p></article>
+<article class="note-card"><p>Christ is the foundation of this journey,that we call life.</p></article>
+<article class="note-card"><p>Faith doesn’t make anxiety disappear. faith gives me somewhere to take it. That is my Lord Jesus.</p></article>
+<article class="note-card"><p>“Christ redeemed us from the curse of the law by becoming a curse for us—for it is written, “Cursed is everyone who is hanged on a tree”—”</p></article>
+<article class="note-card"><p>Always lead with respect like Jesus</p></article>
+<article class="note-card"><p>Every time I ask for forgiveness, I am made new in the eyes of Jesus. Don’t let anyone tell me any different. even myself.</p></article>
+<article class="note-card"><p>Jesus, those judging thoughts are not from you.</p></article>
+<article class="note-card"><p>“but they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.”</p></article>
+<article class="note-card"><p>Before Jesus could establish his glorious millennial kingdom and to resolve the conflicts and evil of the fallen mankind, he first had to come as savior to establish his spiritual kingdom within those who trust him.</p></article>
+<article class="note-card"><p>The servant of the Lord must not strive.(meaning don’t argue about silly things. Or avoiding quarrelsome).</p></article>
+<article class="note-card"><p>Jesus is literally right there when you pray. Just take a moment to realize that. He’s always there with you, but he is right next to you listening when you pray.</p></article>
+<article class="note-card"><p>Fighting often looks like making the right decision even if it&#x27;s not the easiest</p></article>
+<article class="note-card"><p>To be Christian, you have to learn how to receive.</p></article>
+<article class="note-card"><p>Jesus has made us righteous. literally with his blood. live FREE!</p></article>
+<article class="note-card"><p>He notes that being in Christ means we are no longer slaves to a life weighed down by complicated rules. We are free from the weight of perfection and a life centered on and dependent on ourselves. Jesus let’s us share in the inheritance of the kingdom of God.</p></article>
+<article class="note-card"><p>Truly, the joy of the Lord is our strengthen him.</p></article>
+<article class="note-card"><p>True intimacy takes intentionality. Give me strength Jesus to be intentional in making relationships based upon your love.</p></article>
+<article class="note-card"><p>Fighting often looks like making the right decision even if it&#x27;s not the easiest</p></article>
+<article class="note-card"><p>Send me where to go, Jesus. Direct me where you want me. Amen.</p></article>
+<article class="note-card"><p>When things get hard, open my eyes Lord.</p></article>
+<article class="note-card"><p>Lord Jesus, you casted all of our sentences into the depths of the sea. I rest in this.</p></article>
+<article class="note-card"><p>My, sins are drowning in the blood of Jesus.</p></article>
+<article class="note-card"><p>But the glorious truth of the Bible is that “by His stripes we are healed” (Isa. 53:5), and if we abstain from fleshly lusts, Jesus can sew that lacerated soul together and make it whole again in Christ.</p></article>
+<article class="note-card"><p>If the eyes and heart can be trained to be instruments of lust, can we not reverse that and train them to be instruments of righteousness?</p></article>
+<article class="note-card"><p>“Depart from me, all you workers of evil, for the Lord has heard the sound of my weeping.”</p></article>
+<article class="note-card"><p>Let Christ be your rod and staff as you suffer, for the storms of life only make the tree grow stronger.</p></article>
+<article class="note-card"><p>The evidence that a man or woman has been born from above is that they produce the fruits of the Spirit. Sometimes the fruit is small or unimpressive, but the point is this—a true Christian will always produce fruit. An apple tree will always bear apples and though the apples might be little, they are still apples.</p></article>
+<article class="note-card"><p>Though I’m an imperfect sinner, am I growing more like Jesus each day, or have I not really changed since coming to Christ? Would others recognize fruit in my life, or do I live no different from an unbeliever?</p></article>
+<article class="note-card"><p>Let your life become a response from what you’ve seen from Jesus</p></article>
+<article class="note-card"><p>Because in this lust-saturated culture, it’s so easy to forget that my greatest source of happiness is to obey the Savior who loved me enough to lay down His precious life for me.</p></article></div>
+        </section>
+<section id="tab-3" class="tab-panel" aria-labelledby="tab-3-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-3-title">Prayer, Worship &amp; Relationship With God</h2>
+              <p>13 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>Prayer is essential for a life of a believer.</p></article>
+<article class="note-card"><p>Is God worthy for prayer and worship? He is.</p></article>
+<article class="note-card"><p>The prayer of a righteous person has great power. Jesus is the only person that can make us righteous.</p></article>
+<article class="note-card"><p>My life will be transformed if I can spend time with the one person who can truly changed it. That’s Jesus.</p></article>
+<article class="note-card"><p>“Draw near to God, and he will draw near to you. Cleanse your hands, you sinners, and purify your hearts, you double-minded.”</p></article>
+<article class="note-card"><p>We often are in a relationship with God, but we still act like orphans. Let God adopt you, welcome his love. Your heavenly father.</p></article>
+<article class="note-card"><p>Spiritual rest often, comes when you worship.</p></article>
+<article class="note-card"><p>What is worship?</p></article>
+<article class="note-card"><p>That one on one connection with Jesus is what matters heavily when wanting to get closer to God. Jesus would often just talk to God alone, for long periods.</p></article>
+<article class="note-card"><p>As we pursue a relationship with God, our interaction with people should change.</p></article>
+<article class="note-card"><p>God, I am making the hard prayer. And saying bend me for your will. Your will must be done. Please use me.</p></article>
+<article class="note-card"><p>This is a relationship trav. Talk to God everyday, he wants to hear you. vice versa</p></article>
+<article class="note-card"><p>We become overwhelmed by the day-to-day monotony of life and forget who we were made to worship.</p></article></div>
+        </section>
+<section id="tab-4" class="tab-panel" aria-labelledby="tab-4-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-4-title">Sin, Repentance &amp; Forgiveness</h2>
+              <p>25 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>Your pride is the devil’s weapon not yours.</p></article>
+<article class="note-card"><p>Even the smallest amount of temptation can lead to something even bigger. Small temptation is a gateway to a greater evil.</p></article>
+<article class="note-card"><p>I am not my evil thoughts</p></article>
+<article class="note-card"><p>In order to grow, there must be pain, and pain is often intertwined with sin.</p></article>
+<article class="note-card"><p>Don’t abandon yourself for the sake of gain. The earthly flesh gets lost in greed. Just like any other sin would.</p></article>
+<article class="note-card"><p>Pride in ourselves is the essence of all sin.</p></article>
+<article class="note-card"><p>Don’t quarrel with the evil thoughts</p></article>
+<article class="note-card"><p>Sin is not my responsibility.</p></article>
+<article class="note-card"><p>I am arrogant when I sin. I need to put my laziness and pride and lust. At Jesus‘s feet. And lay my head upon his chest.</p></article>
+<article class="note-card"><p>When conviction hits you let it grieve you and correct you. But don’t chew on guilt and shame because shame is already taken away because of Jesus.</p></article>
+<article class="note-card"><p>That’s not my shame, to Bare.</p></article>
+<article class="note-card"><p>God says homosexuality and gay related things are an abomination. But lying cheating and everything else that’s a sin is also an abomination. No sin is more redeemable than the other. It’s all evil.</p></article>
+<article class="note-card"><p>Sin convinces people that God doesn’t want to deal with him. That is just a lie from the devil. God wants you all the time.</p></article>
+<article class="note-card"><p>Holiness means saying no to wrongful actions and asking forgiveness for when we do make mistakes. it looks like putting aside any selfish desires, and helping the kingdom of God.</p></article>
+<article class="note-card"><p>My sins are forgiven. live free</p></article>
+<article class="note-card"><p>Repentance is not dictated by what you feel while sinning. But how feel after you committed the sin.</p></article>
+<article class="note-card"><p>Covetousness is a breeding ground for 1000 other sins.</p></article>
+<article class="note-card"><p>Decision. It might mean being gentle when we want to be harsh. It might mean choosing love when it would be easier to be selfish.</p></article>
+<article class="note-card"><p>Joy is a weapon against the evil of the devil. use as a weapon and watch joy bring the victory!</p></article>
+<article class="note-card"><p>Decision. It might mean being gentle when we want to be harsh. It might mean choosing love when it would be easier to be selfish.</p></article>
+<article class="note-card"><p>And if you let Him, those hands will slowly rebuild the layers that were lost to the wastefulness of sin.</p></article>
+<article class="note-card"><p>Many believe that the forgiveness of sins was a one-time event that happened when Jesus was crucified and resurrected. At that instant, Christ overcame the powers of death and sin for not just the past and the present, but also the future. The forgiveness of sins is not dependent on your repentance, your repentance is only an outward display of your love for God.</p></article>
+<article class="note-card"><p>If that is the case, then the most crucial part of repentance isn&#x27;t asking for forgiveness (because that&#x27;s already been given), but your resolution to avoid sinning in the future.</p></article>
+<article class="note-card"><p>That is why we confess our sins to God—not to maintain our salvation, but to bring ourselves back into close fellowship with the God who loves us and has already forgiven us.</p></article>
+<article class="note-card"><p>I repent so my heart can be aligned with your heart!</p></article></div>
+        </section>
+<section id="tab-5" class="tab-panel" aria-labelledby="tab-5-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-5-title">Holiness, Obedience &amp; Discipleship</h2>
+              <p>5 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>It is our duty to serve Jesus. We don’t serve Jesus because we’re doing something for him. It’s because we are obliged to follow in his footsteps. This is a good reason, not to boast about all of the worship you’ve done. Since it’s not about how much you’ve done. But it’s a duty in responsibility to serve.</p></article>
+<article class="note-card"><p>We live by faith alone, but faith is not alone It is accompanied by good works.</p></article>
+<article class="note-card"><p>I am not holy without him.</p></article>
+<article class="note-card"><p>“And let us consider how to stir up one another to love and good works, not neglecting to meet together, as is the habit of some, but encouraging one another, and all the more as you see the Day drawing near.”</p></article>
+<article class="note-card"><p>It’s important that we remind ourselves that we are saved for good works not by good works.</p></article></div>
+        </section>
+<section id="tab-6" class="tab-panel" aria-labelledby="tab-6-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-6-title">Wisdom &amp; Scripture</h2>
+              <p>15 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>Memorizing Scripture is a good defense against temptation.</p></article>
+<article class="note-card"><p>A Bible on a shelf is like a sword unsheathed.</p></article>
+<article class="note-card"><p>Those thoughts that start in your head do they align with the Bible?</p></article>
+<article class="note-card"><p>Stop living based off my feelings and start living off of the truth that is written.</p></article>
+<article class="note-card"><p>Be a doer who acts in his words. We do these things from the word of God. Don’t just read it and forget, do it and practice it. Consume the word of God.</p></article>
+<article class="note-card"><p>Love rejoices in the truth</p></article>
+<article class="note-card"><p>I need to be renewed by the word of God daily.</p></article>
+<article class="note-card"><p>Don’t let ego creep in when teaching the word of God. If someone doesn’t understand it be patient. Sometimes God takes time to work in people.</p></article>
+<article class="note-card"><p>The main fuel for faith is the word of God.</p></article>
+<article class="note-card"><p>Covetousness is the desire for other things in competition with the Word of God</p></article>
+<article class="note-card"><p>Undeniable truth.</p></article>
+<article class="note-card"><p>Do not be enticed by a culture of opinions pointing to a version of truth that has no power. including my own.</p></article>
+<article class="note-card"><p>So today, let’s get in the Word —before the world gets into us!</p></article>
+<article class="note-card"><p>Just the very action of reading the Word of God purifies our hearts and minds.</p></article>
+<article class="note-card"><p>“How can a young man keep his way pure? By guarding it according to your word.”</p></article></div>
+        </section>
+<section id="tab-7" class="tab-panel" aria-labelledby="tab-7-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-7-title">Mind, Emotions &amp; Identity</h2>
+              <p>18 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>I want to do things out of the tenacity that God has provided in me, not fear. Fear is a weapon of the enemy. The fear I’m referencing is evil fear. Judgment and anxiety.</p></article>
+<article class="note-card"><p>Awareness is where healing is going to start. What is underneath the worry that you are feeling? I think it’s fear. God help me.</p></article>
+<article class="note-card"><p>My thoughts aren’t my identity but what</p></article>
+<article class="note-card"><p>I am loved and uniquely valued. Not worthless.</p></article>
+<article class="note-card"><p>Lord God, I am not going to put my fear and worry above you. You are so much more than that. God you have given me strength to conquer fear. The battle has been won. You have given me life, free of sin.</p></article>
+<article class="note-card"><p>HEART SOUL AND MIND</p></article>
+<article class="note-card"><p>I want to be a son of peace. Welcoming others and showing them hospitality. Like the sons of peace who showed the disciples hospitality</p></article>
+<article class="note-card"><p>A negative mindset, never leads to a positive life</p></article>
+<article class="note-card"><p>Pride is an issue of where your satisfaction is.</p></article>
+<article class="note-card"><p>I want my pride at his feet and my satisfaction in his love.</p></article>
+<article class="note-card"><p>I am not worthless because God created me. for all the things that he’s done and that he will do</p></article>
+<article class="note-card"><p>Self-pity is holding me back, self pity comes from a sense of unrecognized worthiness, which is covered in pride. I can’t be perfect. God has covered it all, so “God willing” I just do my best and move on within his strength.</p></article>
+<article class="note-card"><p>Expanding always feels uncomfortable, but it’s worth it.</p></article>
+<article class="note-card"><p>Your peace is rooted in faith, conviction, and emotional maturity.</p></article>
+<article class="note-card"><p>Be weary of the thoughts that say “have to” and “need to”.</p></article>
+<article class="note-card"><p>Surrendering all that worry</p></article>
+<article class="note-card"><p>Worry does not empty tomorrow of its sorrow. it empties today of its strength. Corey Tenenbaum.</p></article>
+<article class="note-card"><p>“But he was pierced for our transgressions; he was crushed for our iniquities; upon him was the chastisement that brought us peace, and with his wounds we are healed.”</p></article></div>
+        </section>
+<section id="tab-8" class="tab-panel" aria-labelledby="tab-8-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-8-title">Love, Mercy &amp; Relationships</h2>
+              <p>21 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>The issue about saying. I’m doing it for God. Is that God doesn’t need things for me. He wants my heart. He wants my love. And he wants to be in a relationship with me. He has everything he needs, but he wants me. So the reason I pray, read the Bible. Is so I can get closer to God and love him even more.</p></article>
+<article class="note-card"><p>Love one another as he loved us</p></article>
+<article class="note-card"><p>Stay vigilant against hidden reefs at the love feast. beware and help those who are unaware of people who can take down a church. God give me strength to do this. I can’t do an ounce of it without you.</p></article>
+<article class="note-card"><p>The new testament preaches grace and faith. Not The other way around. Grace first, then share your faith. NO JUDGEMENT, righteous judgment, of course. No hate, at all!</p></article>
+<article class="note-card"><p>I’m no better than any people who do worldly things.</p></article>
+<article class="note-card"><p>Kindness is valuing people so highly that I refuse to engage in fault finding.</p></article>
+<article class="note-card"><p>I love mom</p></article>
+<article class="note-card"><p>Love isn’t earned by being perfect.</p></article>
+<article class="note-card"><p>My courage lies in his love</p></article>
+<article class="note-card"><p>Love has set me free and now i am free to love.</p></article>
+<article class="note-card"><p>Jesus is my comforter, my best friend. My God. I should respect him and fear him in a reverence way. But I should not be afraid of him in a scary way. He has the most love in his heart. Out of anything in this world or universe.</p></article>
+<article class="note-card"><p>“A friend loves at all times, and a brother is born for adversity.”</p></article>
+<article class="note-card"><p>“A man of many companions may come to ruin, but there is a friend who sticks closer than a brother.”</p></article>
+<article class="note-card"><p>Relationships are built through consistency.</p></article>
+<article class="note-card"><p>“For the whole law is fulfilled in one word: “You shall love your neighbor as yourself.””</p></article>
+<article class="note-card"><p>Exercising judgment and loving people with the truth. no matter how hard it is.</p></article>
+<article class="note-card"><p>- mercy, triumphs judgment.</p></article>
+<article class="note-card"><p>True power is in forgiveness. forgiveness that was given to us from Jesus. That power needs to be transferred on other people when they do wrong. forgive them as Jesus forgave us. Love as he</p></article>
+<article class="note-card"><p>Loved.</p></article>
+<article class="note-card"><p>If Satan drops a bomb on your piece and you don’t make ready for war, people are going to wonder whose side you’re on.</p></article>
+<article class="note-card"><p>Loss is the corruption that Satan has left on love.</p></article></div>
+        </section>
+<section id="tab-9" class="tab-panel" aria-labelledby="tab-9-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-9-title">Suffering, Trials &amp; Perseverance</h2>
+              <p>15 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>The suffering we have is nothing to compare to the glory that is promised</p></article>
+<article class="note-card"><p>Paul knew that affliction produces steadfast character within us. When we choose to endure through suffering, Jesus forms strength and confidence within us that we couldn&#x27;t attain otherwise.</p></article>
+<article class="note-card"><p>We suffer together so we can rejoice together!</p></article>
+<article class="note-card"><p>He fights for you.</p></article>
+<article class="note-card"><p>I’m only fighting battles in my head. i’m tired of the constant fighting. I gotta give that to God. Most importantly. God, you have to take it away from me. I can’t do it without you. Any of it. I trust that you will.</p></article>
+<article class="note-card"><p>When in hard times we need to worship God together. What else are we supposed to do?</p></article>
+<article class="note-card"><p>Live for him trav. discipleship is a way of life. take up the cross like Jesus did and suffer through hard times to show others the impact of Jesus in your life.</p></article>
+<article class="note-card"><p>Pain in the flowers.</p></article>
+<article class="note-card"><p>Sure, we can choose not to be obedient to God. But so was Jonah. And he went through three days of suffering. We can choose. But what is our suffering going to be like when we choose against God?</p></article>
+<article class="note-card"><p>Suffering now and a big reward later. This is the journey of faith.</p></article>
+<article class="note-card"><p>There’s no need to fight battles that haven’t even happened yet. God said worry about today because it has its own problems.</p></article>
+<article class="note-card"><p>Fight impatience with Scripture. Just like any other temptation.</p></article>
+<article class="note-card"><p>“being strengthened with all power, according to his glorious might, for all endurance and patience with joy;”</p></article>
+<article class="note-card"><p>God is the reason why I smile in the face of danger why I make jokes in hard times. He is my reason he is my health and he is why I react the way I do in such hard moments. Thank you, God. Please never let me forget that you’re my reason.</p></article>
+<article class="note-card"><p>The more we return to the uncleanness, the more wounds our souls suffer.</p></article></div>
+        </section>
+<section id="tab-10" class="tab-panel" aria-labelledby="tab-10-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-10-title">Money, Contentment &amp; Worldly Desires</h2>
+              <p>8 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>Covetousness - this is desiring something so much that you lose your contentment in God. The opposite of covetousness is contentment with God.</p></article>
+<article class="note-card"><p>Covetousness is a heart divided between two gods. so Paul calls it idolatry.</p></article>
+<article class="note-card"><p>I worship MY PHONE really bad. I authorize it priority over God a lot more than I should. Please, Lord God help me to give you more attention that you deserve and to put worldly things away. Amen.</p></article>
+<article class="note-card"><p>Generosity doesn’t mean to give away foolishly.</p></article>
+<article class="note-card"><p>They have been laying themselves up treasures in heaven by being generous to the needy.</p></article>
+<article class="note-card"><p>In the end covetousness can destroy the soul in hell.</p></article>
+<article class="note-card"><p>When people give me money / give me money in like a godly sense, like helping towards ministry and stuff. I don’t get richer they get richer because of the generosity they showed me. Because I know without that money I am still so grateful to God. And they are showing the wonderful compassion of Jesus. So let’s not hold money higher above Jesus and others. be content no matter what. Lets not let money rule people. Let compassion and contentment that is specifically given by God rule over our judgement.</p></article>
+<article class="note-card"><p>Be cautious of these worldly things that seem small, they can consume you quickly.</p></article></div>
+        </section>
+<section id="tab-11" class="tab-panel" aria-labelledby="tab-11-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-11-title">Purpose, Calling &amp; Christian Life</h2>
+              <p>7 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>It’s not about if you’re chosen it’s about when you answer the call.</p></article>
+<article class="note-card"><p>We were made on purpose, so let’s live like it.</p></article>
+<article class="note-card"><p>The only one who can satisfy your heart is the one who created it.</p></article>
+<article class="note-card"><p>True mentorship, and leadership requires a healthy amount of kindness and accountability.</p></article>
+<article class="note-card"><p>I believe the Lord has called me to encourage.</p></article>
+<article class="note-card"><p>“For you were called to freedom, brothers. Only do not use your freedom as an opportunity for the flesh, but through love serve one another.”</p></article>
+<article class="note-card"><p>We are created FOR good works!</p></article></div>
+        </section>
+<section id="tab-12" class="tab-panel" aria-labelledby="tab-12-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-12-title">Holy Spirit</h2>
+              <p>10 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>Consider this when thinking about healing. It is the faith in ourselves that God provides that heals people. Sure God can heal anything or do anything. But it is us who heal people, because of his faith that he provided, and the love that he provided. We are given the power of the Holy Spirit and through faith we can do anything. Commanded it to leave like Jesus did. Command him to walk.</p></article>
+<article class="note-card"><p>Pray to the Holy Spirit that he gives you blessing and understanding over the word.</p></article>
+<article class="note-card"><p>When the Holy Spirit controls your heart it leads to life and peace. If sin controls you it leads to chaos then death.</p></article>
+<article class="note-card"><p>“But if you are led by the Spirit, you are not under the law.”</p></article>
+<article class="note-card"><p>When we relax our spirit, it can turn into spiritual laziness. Don’t let relaxation become laziness.</p></article>
+<article class="note-card"><p>“If we live by the Spirit, let us also keep in step with the Spirit.”</p></article>
+<article class="note-card"><p>Lord Jesus, I pray that you give me strength to keep in step with the Holy Spirit that you have provided, the same spirit that opposes all darkness and evil, and all of my fleshly desires. and all my evil desires. please father give me strength to walk with you. Please give me wisdom to see what’s right and what’s wrong and give me motivation for the future which you have promised. Amen.</p></article>
+<article class="note-card"><p>Holy Spirit speak through me.</p></article>
+<article class="note-card"><p>Let’s restore the kingdom of God by bringing people into his kingdom But only through Jesus’s strength. Remember that restoring isn’t really the big thing. It’s the process of restoring God’s kingdom through his people that will make us who we are meant to be in Jesus’s image. Thank you, Holy Spirit.</p></article>
+<article class="note-card"><p>The fierce battles Young believer is called on wage, is the evidence of the work of the Holy Spirit in his heart.</p></article></div>
+        </section>
+<section id="tab-13" class="tab-panel" aria-labelledby="tab-13-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-13-title">Bible Studies &amp; Verses</h2>
+              <p>29 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>Luke 2:30-32 ESV</p></article>
+<article class="note-card"><p>‭‭James‬ ‭5‬:‭12‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Hebrews‬ ‭13‬:‭5‬-‭6‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Philippians‬ ‭4‬:‭11‬-‭13‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>Jude 12: that what the evil/ sinful people ruling this world look like.</p></article>
+<article class="note-card"><p>The King’s heart is a stream of water in the hand of the Lord. He turns it wherever he wants. Proverbs 21: 1</p></article>
+<article class="note-card"><p>Read proverbs 1 wisdom poem</p></article>
+<article class="note-card"><p>‭‭James‬ ‭1‬:‭2‬-‭3‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭James‬ ‭1‬:‭14‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Galatians‬ ‭5‬:‭18‬ ‭</p></article>
+<article class="note-card"><p>‭‭Galatians‬ ‭5‬:‭25‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Proverbs‬ ‭17‬:‭17‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Proverbs‬ ‭19‬:‭21‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Galatians‬ ‭5‬:‭14‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>I have learned the secret of facing plenty, hunger, abundance, and need. Philippians 411 through 12.</p></article>
+<article class="note-card"><p>‭‭Galatians‬ ‭5‬:‭13‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Galatians‬ ‭5‬:‭5‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Hebrews‬ ‭10‬:‭24‬-‭25‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Galatians‬ ‭3‬:‭13‬ ‭</p></article>
+<article class="note-card"><p>‭‭Isaiah‬ ‭40‬:‭31‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Colossians‬ ‭1‬:‭11‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Psalm‬ ‭30‬:‭5‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>Psalm 42 5-6</p></article>
+<article class="note-card"><p>God is the strength of my heart and my portion forever! Psalm 7326</p></article>
+<article class="note-card"><p>What we need is someone who knows everything about us and cares deeply for us and our real circumstances—someone we can trust to navigate as we go through the unknowns of life. God knows each of us down to the last hair on our head (Matthew 10:30).</p></article>
+<article class="note-card"><p>‭‭Isaiah‬ ‭53‬:‭5‬ ‭</p></article>
+<article class="note-card"><p>‭‭Psalm‬ ‭6‬:‭8‬ ‭ESV‬‬</p></article>
+<article class="note-card"><p>‭‭Psalm‬ ‭119‬:‭9‬</p></article>
+<article class="note-card"><p>‭‭Hebrews‬ ‭12‬:‭6‬-‭7‬ ‭ESV‬‬</p></article></div>
+        </section>
+<section id="tab-14" class="tab-panel" aria-labelledby="tab-14-title">
+            <div class="section-heading">
+              <span class="eyebrow">Bible Notes</span>
+              <h2 id="tab-14-title">Uncategorized / Review</h2>
+              <p>63 notes in this collection.</p>
+            </div>
+            <div class="notes-grid"><article class="note-card"><p>I’m a whole lot stronger than my worries try to make me feel.</p></article>
+<article class="note-card"><p>Hatred and grudges are a fool’s gold.</p></article>
+<article class="note-card"><p>‭‭1 Peter‬ ‭4‬:‭9‬-‭10‬</p></article>
+<article class="note-card"><p>“But above all, my brothers, do not swear, either by heaven or by earth or by any other oath, but let your “yes” be yes and your “no” be no, so that you may not fall under condemnation.”</p></article>
+<article class="note-card"><p>Keep going trav</p></article>
+<article class="note-card"><p>Otherwise, we can’t manage our lives without something to compare it to.</p></article>
+<article class="note-card"><p>‭‭James‬ ‭4‬:‭8‬</p></article>
+<article class="note-card"><p>It’s not who am i?</p></article>
+<article class="note-card"><p>But he who is in me?</p></article>
+<article class="note-card"><p>Direct my feet and strengthen my heart</p></article>
+<article class="note-card"><p>It’s not about what I have done for him. It’s about what he has done for me.</p></article>
+<article class="note-card"><p>Greater he who is in you than he who is in the world</p></article>
+<article class="note-card"><p>The happiest moments are when we forget about our precious selves. but not to the point of destruction.</p></article>
+<article class="note-card"><p>“Be wretched and mourn and weep. Let your laughter be turned to mourning and your joy to gloom.”</p></article>
+<article class="note-card"><p>‭‭James‬ ‭4‬:‭9‬</p></article>
+<article class="note-card"><p>Work for rest. Not from rest.</p></article>
+<article class="note-card"><p>(mourning)</p></article>
+<article class="note-card"><p>444444444444;444444;;;;;;444444444</p></article>
+<article class="note-card"><p>Seek the giver instead of the gifts</p></article>
+<article class="note-card"><p>Let’s make heaven crowded.</p></article>
+<article class="note-card"><p>Revival starts with the individual.</p></article>
+<article class="note-card"><p>Complacency is a destroyer.</p></article>
+<article class="note-card"><p>The only approval that actually changes how you move through the world is yours.</p></article>
+<article class="note-card"><p>Focus on the results. Eye on the finish line.</p></article>
+<article class="note-card"><p>COUNT IT ALL JOY</p></article>
+<article class="note-card"><p>“But each person is tempted when he is lured and enticed by his own desire.”</p></article>
+<article class="note-card"><p>So don’t look down on someone.</p></article>
+<article class="note-card"><p>The world does not revolve around me</p></article>
+<article class="note-card"><p>I am trying to unlearn something, that i have had to use to survive</p></article>
+<article class="note-card"><p>And that includes my addictions.</p></article>
+<article class="note-card"><p>The need for attention creates jealousy</p></article>
+<article class="note-card"><p>The tongue of the wise brings healing.</p></article>
+<article class="note-card"><p>In his name means according to his nature, and according to his will.</p></article>
+<article class="note-card"><p>If i’m getting tempted, it means i’m a threat.</p></article>
+<article class="note-card"><p>Six66six66six66six66six66</p></article>
+<article class="note-card"><p>But he also wants us as well.</p></article>
+<article class="note-card"><p>Return back with zeal</p></article>
+<article class="note-card"><p>‭‭</p></article>
+<article class="note-card"><p>And our best may not be the things we like.</p></article>
+<article class="note-card"><p>Creating subtle shifts that initiate real change.</p></article>
+<article class="note-card"><p>He wants my heart and who I am</p></article>
+<article class="note-card"><p>Respect the wishes of my bebe and elders.</p></article>
+<article class="note-card"><p>Return with zeal.</p></article>
+<article class="note-card"><p>Transforming interruptions into rewards</p></article>
+<article class="note-card"><p>We can’t do everything, but everyone can do something.</p></article>
+<article class="note-card"><p>For he can change the unplanned place at an unplanned pace into the happiest ending imaginable.</p></article>
+<article class="note-card"><p>- comparison is the thief of joy.</p></article>
+<article class="note-card"><p>1010101010101010101010101010101010</p></article>
+<article class="note-card"><p>The best way to stop a problem is to never even start it at all.</p></article>
+<article class="note-card"><p>Would.</p></article>
+<article class="note-card"><p>Be intentional to invest in the things of HEAVEN, as you are living here on the Earth.</p></article>
+<article class="note-card"><p>WITH JOY</p></article>
+<article class="note-card"><p>Live out your inheritance, not your circumstance.</p></article>
+<article class="note-card"><p>“For his anger is but for a moment, and his favor is for a lifetime. Weeping may tarry for the night, but joy comes with the morning.”</p></article>
+<article class="note-card"><p>Why are you cast down, my soul</p></article>
+<article class="note-card"><p>And why are you in turmoil within</p></article>
+<article class="note-card"><p>Zeal without humility. Can be rude.</p></article>
+<article class="note-card"><p>Just because something is easy doesn’t mean it’s the best.</p></article>
+<article class="note-card"><p>The important thing is not what made you fall; neither is it the amount of times you have fallen. The important thing is that when you fall, you rise again.</p></article>
+<article class="note-card"><p>All the dark caves of sadness and sorrow are really tunnels leading to the fields of joy.</p></article>
+<article class="note-card"><p>-blake</p></article>
+<article class="note-card"><p>Palms 10 show mikalynn when relevant</p></article>
+<article class="note-card"><p>A enemy is way more dangerous on the inside than the outside.</p></article></div>
+        </section>
+</main>
+
+<footer>
+  Bible Notes · A personal collection of Scripture reflections and study notes.
+</footer>
+
+<script>
+const menuButton = document.getElementById('menuButton');
+const sideNav = document.getElementById('sideNav');
+const overlay = document.getElementById('overlay');
+
+function setMenu(open) {
+  sideNav.classList.toggle('open', open);
+  overlay.classList.toggle('show', open);
+  menuButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+menuButton.addEventListener('click', () => setMenu(!sideNav.classList.contains('open')));
+overlay.addEventListener('click', () => setMenu(false));
+
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById(id);
+  if (panel) panel.classList.add('active');
+  const button = document.querySelector('.nav-link[data-target="' + id + '"]');
+  if (button) button.classList.add('active');
+  setMenu(false);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function showHome(event) {
+  if (event) event.preventDefault();
+  showTab('home');
+}
+
+document.querySelectorAll('.nav-link').forEach(button => {
+  button.addEventListener('click', () => showTab(button.dataset.target));
+});
+document.querySelectorAll('.home-link').forEach(link => {
+  link.addEventListener('click', (event) => {
+    event.preventDefault();
+    showTab(link.dataset.target);
+  });
+});
+</script>
+</body>
+</html>
