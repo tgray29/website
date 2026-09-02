@@ -1,339 +1,4 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="A simple, organized collection of Bible notes, reflections, Scripture studies, and Christian life notes.">
-<title>Bible Notes</title>
-<style>
-:root {
-  --bg: #f6f3ed;
-  --surface: #fffdf9;
-  --surface-2: #f0ebe2;
-  --text: #27251f;
-  --muted: #706b61;
-  --accent: #6b5b45;
-  --accent-dark: #4c4031;
-  --border: #ded7ca;
-  --shadow: 0 14px 35px rgba(54, 45, 34, .08);
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
-  line-height: 1.7;
-}
-button { font: inherit; }
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: rgba(246,243,237,.94);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-.header-inner {
-  max-width: 1180px;
-  margin: auto;
-  min-height: 72px;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--text);
-  text-decoration: none;
-}
-.brand-mark {
-  width: 38px; height: 38px;
-  display: grid; place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  background: var(--surface);
-  font-size: 20px;
-}
-.brand-title { font-size: 1.15rem; font-weight: 700; }
-.menu-button {
-  width: 44px; height: 44px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--surface);
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-}
-.hamburger { width: 20px; display: grid; gap: 4px; }
-.hamburger span { height: 2px; width: 100%; background: var(--text); border-radius: 2px; }
-.layout {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 56px 24px 80px;
-}
-.hero {
-  min-height: 45vh;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 30px 0 50px;
-}
-.hero-inner { max-width: 760px; }
-.kicker {
-  text-transform: uppercase;
-  letter-spacing: .16em;
-  font-size: .75rem;
-  color: var(--muted);
-  font-weight: 700;
-}
-.hero h1 {
-  font-size: clamp(3rem, 8vw, 6rem);
-  line-height: .98;
-  margin: 18px 0;
-  font-weight: 500;
-}
-.hero p { color: var(--muted); font-size: 1.25rem; font-style: italic; max-width: 620px; margin: auto; }
-.content-shell { position: relative; }
-.side-nav {
-  position: fixed;
-  top: 72px;
-  left: 0;
-  width: 320px;
-  height: calc(100vh - 72px);
-  padding: 24px;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  transform: translateX(-100%);
-  transition: transform .25s ease;
-  z-index: 15;
-  overflow-y: auto;
-}
-.side-nav.open { transform: translateX(0); }
-.nav-title {
-  font-size: .8rem;
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  color: var(--muted);
-  margin: 4px 0 15px;
-}
-.nav-link {
-  display: block;
-  width: 100%;
-  text-align: left;
-  border: 0;
-  background: transparent;
-  padding: 10px 12px;
-  margin: 2px 0;
-  border-radius: 8px;
-  color: var(--text);
-  cursor: pointer;
-}
-.nav-link:hover, .nav-link.active { background: var(--surface-2); }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-.section-heading { margin-bottom: 28px; }
-.eyebrow {
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  color: var(--muted);
-  font-size: .75rem;
-  font-weight: 700;
-}
-.section-heading h2 {
-  margin: 6px 0 3px;
-  font-size: clamp(2rem, 5vw, 3.4rem);
-  line-height: 1.1;
-  font-weight: 500;
-}
-.section-heading p { color: var(--muted); margin: 0; }
-.notes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
-}
-.note-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  box-shadow: var(--shadow);
-}
-.note-card p { margin: 0; }
-.overlay {
-  position: fixed; inset: 72px 0 0;
-  background: rgba(39,37,31,.28);
-  opacity: 0; pointer-events: none;
-  transition: opacity .25s ease;
-  z-index: 10;
-}
-.overlay.show { opacity: 1; pointer-events: auto; }
-footer {
-  max-width: 1180px;
-  margin: 50px auto 0;
-  padding: 25px 24px;
-  color: var(--muted);
-  font-size: .9rem;
-  border-top: 1px solid var(--border);
-  text-align: center;
-}
-
-.home-links {
-  max-width: 900px;
-  margin: 0 auto 30px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-.home-link {
-  min-height: 92px;
-  display: grid;
-  grid-template-columns: 38px 1fr 24px;
-  align-items: center;
-  gap: 14px;
-  padding: 18px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  color: var(--text);
-  text-decoration: none;
-  box-shadow: var(--shadow);
-  transition: transform .18s ease, border-color .18s ease, background .18s ease;
-  cursor: pointer;
-}
-.home-link:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent);
-  background: #fffefa;
-}
-.home-link.featured { grid-column: 1 / -1; }
-.home-link-icon {
-  width: 38px; height: 38px;
-  display: grid; place-items: center;
-  border-radius: 50%;
-  background: var(--surface-2);
-  font-size: 1.1rem;
-}
-.home-link strong { display: block; font-size: 1.05rem; }
-.home-link small { display: block; color: var(--muted); margin-top: 2px; font-size: .88rem; line-height: 1.45; }
-.arrow { color: var(--muted); font-size: 1.25rem; }
-
-@media (max-width: 700px) {
-  .layout { padding: 25px 16px 60px; }
-  .header-inner { padding: 0 16px; }
-  .hero { min-height: 40vh; }
-  .hero h1 { font-size: 3.3rem; }
-  .notes-grid { grid-template-columns: 1fr; }
-  .home-links { grid-template-columns: 1fr; }
-  .home-link.featured { grid-column: auto; }
-  .side-nav { width: min(88vw, 320px); }
-}
-</style>
-</head>
-<body>
-<header class="site-header">
-  <div class="header-inner">
-    <a class="brand" href="javascript:void(0)" onclick="showTab('home')">
-      <span class="brand-mark">✦</span>
-      <span class="brand-title">Bible Notes</span>
-    </a>
-    <button class="menu-button" id="menuButton" aria-label="Open navigation" aria-expanded="false">
-      <span class="hamburger"><span></span><span></span><span></span></span>
-    </button>
-  </div>
-</header>
-
-<nav class="side-nav" id="sideNav" aria-label="Bible notes categories">
-  <div class="nav-title">Explore Notes</div>
-  <button class="nav-link active" data-target="home">Home</button>
-  <button class="nav-link" data-target="tab-0">Faith &amp; Trust</button>
-  <button class="nav-link" data-target="tab-1">God &amp; His Character</button>
-  <button class="nav-link" data-target="tab-2">Jesus Christ</button>
-  <button class="nav-link" data-target="tab-3">Prayer, Worship &amp; Relationship With God</button>
-  <button class="nav-link" data-target="tab-4">Sin, Repentance &amp; Forgiveness</button>
-  <button class="nav-link" data-target="tab-5">Holiness, Obedience &amp; Discipleship</button>
-  <button class="nav-link" data-target="tab-6">Wisdom &amp; Scripture</button>
-  <button class="nav-link" data-target="tab-7">Mind, Emotions &amp; Identity</button>
-  <button class="nav-link" data-target="tab-8">Love, Mercy &amp; Relationships</button>
-  <button class="nav-link" data-target="tab-9">Suffering, Trials &amp; Perseverance</button>
-  <button class="nav-link" data-target="tab-10">Money, Contentment &amp; Worldly Desires</button>
-  <button class="nav-link" data-target="tab-11">Purpose, Calling &amp; Christian Life</button>
-  <button class="nav-link" data-target="tab-12">Holy Spirit</button>
-  <button class="nav-link" data-target="tab-13">Bible Studies &amp; Verses</button>
-  <button class="nav-link" data-target="tab-14">Uncategorized / Review</button>
-</nav>
-<div class="overlay" id="overlay"></div>
-
-<main class="layout">
-  <section id="home" class="tab-panel active">
-    <div class="hero">
-      <div class="hero-inner">
-        <div class="kicker">Faith · Scripture · Reflection</div>
-        <h1>Bible Notes</h1>
-        <p>“Be still, and know that I am God.” — Psalm 46:10</p>
-      </div>
-    </div>
-
-    <div class="home-links">
-      <a class="home-link featured" data-target="tab-0">
-        <span class="home-link-icon">✦</span>
-        <span><strong>Faith &amp; Trust</strong><small>Explore faith, hope, trust, and future grace.</small></span>
-        <span class="arrow">→</span>
-      </a>
-      <a class="home-link" data-target="tab-1">
-        <span class="home-link-icon">◈</span>
-        <span><strong>God &amp; His Character</strong><small>Reflections on God's nature, promises, and faithfulness.</small></span>
-        <span class="arrow">→</span>
-      </a>
-      <a class="home-link" data-target="tab-2">
-        <span class="home-link-icon">†</span>
-        <span><strong>Jesus Christ</strong><small>Notes about Jesus, salvation, lordship, and following Him.</small></span>
-        <span class="arrow">→</span>
-      </a>
-      <a class="home-link" data-target="tab-3">
-        <span class="home-link-icon">⌁</span>
-        <span><strong>Prayer &amp; Worship</strong><small>Prayer, worship, stillness, and relationship with God.</small></span>
-        <span class="arrow">→</span>
-      </a>
-      <a class="home-link" data-target="tab-4">
-        <span class="home-link-icon">◇</span>
-        <span><strong>Sin &amp; Forgiveness</strong><small>Repentance, temptation, forgiveness, grace, and freedom.</small></span>
-        <span class="arrow">→</span>
-      </a>
-      <a class="home-link" data-target="tab-6">
-        <span class="home-link-icon">▤</span>
-        <span><strong>Wisdom &amp; Scripture</strong><small>Bible study, wisdom, truth, discernment, and Scripture.</small></span>
-        <span class="arrow">→</span>
-      </a>
-      <a class="home-link" data-target="tab-7">
-        <span class="home-link-icon">♡</span>
-        <span><strong>Mind &amp; Emotions</strong><small>Thoughts, fear, anxiety, identity, peace, and the inner life.</small></span>
-        <span class="arrow">→</span>
-      </a>
-      <a class="home-link" data-target="tab-8">
-        <span class="home-link-icon">∞</span>
-        <span><strong>Love &amp; Relationships</strong><small>Love, mercy, kindness, family, friendship, and community.</small></span>
-        <span class="arrow">→</span>
-      </a>
-      <a class="home-link" data-target="tab-9">
-        <span class="home-link-icon">◌</span>
-        <span><strong>Trials &amp; Perseverance</strong><small>Suffering, endurance, patience, struggles, and spiritual battles.</small></span>
-        <span class="arrow">→</span>
-      </a>
-      <a class="home-link" data-target="tab-13">
-        <span class="home-link-icon">✧</span>
-        <span><strong>Bible Studies &amp; Verses</strong><small>Passages, verse studies, and Scripture references.</small></span>
-        <span class="arrow">→</span>
-      </a>
-    </div>
-  </section>
-
-  <section id="tab-0" class="tab-panel" aria-labelledby="tab-0-title">
+<section id="tab-0" class="tab-panel" aria-labelledby="tab-0-title">
     <div class="section-heading">
       <span class="eyebrow">Bible Notes</span>
       <h2 id="tab-0-title">Faith &amp; Trust</h2>
@@ -348,227 +13,68 @@ footer {
       <article class="note-card"><p>Let’s learn to fight the battle of faith and future grace with the sword of the spirit. Cutting down any temptation, bad thoughts, hatred, and judgment, and even impatience.</p></article>
       <article class="note-card"><p>Hope is only enjoyed when you receive it with the faith given from God.</p></article>
       <article class="note-card"><p>Faith has to be personal.</p></article>
+      <article class="note-card"><p>Trusting God in the dark is the true test of walking by faith and not by sight.</p></article>
+      <article class="note-card"><p>Faith does not mean eliminating all doubt; it means trusting God through the doubt.</p></article>
+      <article class="note-card"><p>When you feel weak, remember that God's strength is made perfect in your weakness.</p></article>
+      <article class="note-card"><p>Faith is stepping out into the unknown while knowing the One who holds the future.</p></article>
+      <article class="note-card"><p>Surrender your plans to God, and watch how He works out His purpose in your life.</p></article>
+      <article class="note-card"><p>God's promises are steadfast, even when our circumstances seem uncertain.</p></article>
+      <article class="note-card"><p>Real faith rests in God’s character, not in our preferred outcomes.</p></article>
+      <article class="note-card"><p>Faith is chosen trust, renewed day by day in prayer and meditation on His word.</p></article>
+      <article class="note-card"><p>Do not let fear dictate your actions; let faith in God guide your path.</p></article>
+      <article class="note-card"><p>True contentment comes from placing your total confidence in the Lord.</p></article>
+      <article class="note-card"><p>When prayers seem unanswered, hold on to faith—God's timing is always perfect.</p></article>
+      <article class="note-card"><p>Faith is the anchor that holds us steady through life's unpredictable storms.</p></article>
+      <article class="note-card"><p>Walking by faith requires letting go of the need to control everything around us.</p></article>
+      <article class="note-card"><p>God's grace is sufficient for today, and His faithfulness will cover tomorrow.</p></article>
+      <article class="note-card"><p>Faith transforms our perspective, allowing us to see trial as opportunities for growth.</p></article>
+      <article class="note-card"><p>Put your trust in the Lord with all your heart, and do not lean on your own understanding.</p></article>
+      <article class="note-card"><p>Deepen your faith through daily devotion and reflection on God's unwavering truth.</p></article>
+      <article class="note-card"><p>Even faith as small as a mustard seed can move mountains through God's power.</p></article>
+      <article class="note-card"><p>Patience in waiting is a vital expression of active faith in God's promises.</p></article>
+      <article class="note-card"><p>When you place your trust in Jesus, peace that surpasses understanding fills your heart.</p></article>
+      <article class="note-card"><p>Faith enables us to stand firm against adversity, knowing God is our fortress.</p></article>
+      <article class="note-card"><p>God's love for you is eternal; let that truth be the foundation of your faith.</p></article>
+      <article class="note-card"><p>True faith manifests in loving service and kindness to those around us.</p></article>
+      <article class="note-card"><p>Every step taken in obedience strengthens your faith and draws you closer to Him.</p></article>
+      <article class="note-card"><p>Lean on God during times of loss, for He is the source of all true comfort.</p></article>
+      <article class="note-card"><p>Faith gives us the courage to speak truth and stand up for righteousness.</p></article>
+      <article class="note-card"><p>Remember how God has led you in the past to renew your faith for the present.</p></article>
+      <article class="note-card"><p>Your faith journey is unique—focus on growing closer to God each day.</p></article>
+      <article class="note-card"><p>Trust in God's sovereignty, knowing that He works all things together for good.</p></article>
+      <article class="note-card"><p>Faith is not a passive feeling, but an active response to God's love and truth.</p></article>
+      <article class="note-card"><p>Let your faith shine brightly so that others may see your good works and glorify God.</p></article>
+      <article class="note-card"><p>When trials arise, let your first response be prayer and active faith.</p></article>
+      <article class="note-card"><p>Faith opens our eyes to see God’s hand at work in the everyday details of life.</p></article>
+      <article class="note-card"><p>Trusting God means surrendering our worries and leaving them at His feet.</p></article>
+      <article class="note-card"><p>God is faithful to complete the good work He has started in you.</p></article>
+      <article class="note-card"><p>Faith grounds us in eternal truths rather than temporary circumstances.</p></article>
+      <article class="note-card"><p>Seek first the Kingdom of God, and trust Him to provide for your needs.</p></article>
+      <article class="note-card"><p>A growing faith produces fruits of love, joy, peace, and perseverance.</p></article>
+      <article class="note-card"><p>Look to Jesus, the founder and perfecter of our faith, in every situation.</p></article>
+      <article class="note-card"><p>When in doubt, fix your eyes on Scripture and hold tight to His promises.</p></article>
+      <article class="note-card"><p>Faith empowers us to forgive others as we have been forgiven by Christ.</p></article>
+      <article class="note-card"><p>God's faithfulness is new every morning; great is His loyalty to us.</p></article>
+      <article class="note-card"><p>Trust that God's plans for you are for welfare and not for evil, to give you hope.</p></article>
+      <article class="note-card"><p>Faith bridges the gap between what we see and what God has promised.</p></article>
+      <article class="note-card"><p>Stand firm in your faith, be courageous, and let all that you do be done in love.</p></article>
+      <article class="note-card"><p>God is our refuge and strength, a very present help in times of trouble.</p></article>
+      <article class="note-card"><p>Let faith replace your anxiety with the peace of God's abiding presence.</p></article>
+      <article class="note-card"><p>A faithful life is lived in constant communion and trust with the Almighty.</p></article>
+      <article class="note-card"><p>Trust in God’s guidance when deciding the direction of your steps.</p></article>
+      <article class="note-card"><p>Faith allows us to rejoice even in suffering, knowing it produces endurance.</p></article>
+      <article class="note-card"><p>Never doubt in the dark what God has shown you in the light.</p></article>
+      <article class="note-card"><p>With God, all things are possible to him who believes and trusts Him.</p></article>
+      <article class="note-card"><p>Faith inspires us to reach out to others with grace, mercy, and compassion.</p></article>
+      <article class="note-card"><p>Hold fast the confession of your hope without wavering, for He who promised is faithful.</p></article>
+      <article class="note-card"><p>Your faith is refined like gold through trials and patient trust in God.</p></article>
+      <article class="note-card"><p>Rest in the truth that God is in control of all things, great and small.</p></article>
+      <article class="note-card"><p>Faith gives us confidence to approach the throne of grace with boldness.</p></article>
+      <article class="note-card"><p>Keep your focus on Jesus and let faith navigate you through life's trials.</p></article>
+      <article class="note-card"><p>Trusting God means resting in His wisdom even when we do not understand His ways.</p></article>
+      <article class="note-card"><p>Faith inspires a life of gratitude, acknowledging God's hand in every blessing.</p></article>
+      <article class="note-card"><p>Let your heart take courage and wait patiently on the Lord in faith.</p></article>
+      <article class="note-card"><p>Faith looks beyond present difficulties to the eternal glory prepared for us.</p></article>
+      <article class="note-card"><p>In every moment, choose trust over fear and faith over doubt.</p></article>
     </div>
   </section>
-
-  <section id="tab-1" class="tab-panel" aria-labelledby="tab-1-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-1-title">God &amp; His Character</h2>
-      <p>188 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>Even though my steps forward aren’t the best, they are still steps forward. Thank God for loving me and understanding.</p></article>
-      <article class="note-card"><p>Weakness is not the end of us. It’s the beginning of God’s might within us.</p></article>
-      <article class="note-card"><p>The love of the Lord God, triumphs over every societal law made by man.</p></article>
-    </div>
-  </section>
-
-  <section id="tab-2" class="tab-panel" aria-labelledby="tab-2-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-2-title">Jesus Christ</h2>
-      <p>95 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>Believe in the name: To love Christ as savior and have obedience to him as Lord. John MacArthur.</p></article>
-      <article class="note-card"><p>The evidence of Jesus’s teachings are the lives that are changed by it.</p></article>
-    </div>
-  </section>
-
-  <section id="tab-3" class="tab-panel" aria-labelledby="tab-3-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-3-title">Prayer, Worship &amp; Relationship With God</h2>
-      <p>13 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>Prayer is essential for a life of a believer.</p></article>
-      <article class="note-card"><p>Is God worthy for prayer and worship? He is.</p></article>
-    </div>
-  </section>
-
-  <section id="tab-4" class="tab-panel" aria-labelledby="tab-4-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-4-title">Sin, Repentance &amp; Forgiveness</h2>
-      <p>25 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>Your pride is the devil’s weapon not yours.</p></article>
-      <article class="note-card"><p>Even the smallest amount of temptation can lead to something even bigger. Small temptation is a gateway to a greater evil.</p></article>
-    </div>
-  </section>
-
-  <section id="tab-5" class="tab-panel" aria-labelledby="tab-5-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-5-title">Holiness, Obedience &amp; Discipleship</h2>
-      <p>5 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>It is our duty to serve Jesus. We don’t serve Jesus because we’re doing something for him. It’s because we are obliged to follow in his footsteps.</p></article>
-    </div>
-  </section>
-
-  <section id="tab-6" class="tab-panel" aria-labelledby="tab-6-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-6-title">Wisdom &amp; Scripture</h2>
-      <p>15 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>Memorizing Scripture is a good defense against temptation.</p></article>
-    </div>
-  </section>
-
-  <section id="tab-7" class="tab-panel" aria-labelledby="tab-7-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-7-title">Mind, Emotions &amp; Identity</h2>
-      <p>18 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>Awareness is where healing is going to start. What is underneath the worry that you are feeling?</p></article>
-    </div>
-  </section>
-
-  <section id="tab-8" class="tab-panel" aria-labelledby="tab-8-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-8-title">Love, Mercy &amp; Relationships</h2>
-      <p>21 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>Love one another as he loved us.</p></article>
-    </div>
-  </section>
-
-  <section id="tab-9" class="tab-panel" aria-labelledby="tab-9-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-9-title">Suffering, Trials &amp; Perseverance</h2>
-      <p>15 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>The suffering we have is nothing to compare to the glory that is promised.</p></article>
-    </div>
-  </section>
-
-  <section id="tab-10" class="tab-panel" aria-labelledby="tab-10-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-10-title">Money, Contentment &amp; Worldly Desires</h2>
-      <p>8 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>The opposite of covetousness is contentment with God.</p></article>
-    </div>
-  </section>
-
-  <section id="tab-11" class="tab-panel" aria-labelledby="tab-11-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-11-title">Purpose, Calling &amp; Christian Life</h2>
-      <p>7 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>We were made on purpose, so let’s live like it.</p></article>
-    </div>
-  </section>
-
-  <section id="tab-12" class="tab-panel" aria-labelledby="tab-12-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-12-title">Holy Spirit</h2>
-      <p>10 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>When the Holy Spirit controls your heart it leads to life and peace.</p></article>
-    </div>
-  </section>
-
-  <section id="tab-13" class="tab-panel" aria-labelledby="tab-13-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-13-title">Bible Studies &amp; Verses</h2>
-      <p>29 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>Luke 2:30-32 ESV</p></article>
-      <article class="note-card"><p>Philippians 4:11-13 ESV</p></article>
-    </div>
-  </section>
-
-  <section id="tab-14" class="tab-panel" aria-labelledby="tab-14-title">
-    <div class="section-heading">
-      <span class="eyebrow">Bible Notes</span>
-      <h2 id="tab-14-title">Uncategorized / Review</h2>
-      <p>63 notes in this collection.</p>
-    </div>
-    <div class="notes-grid">
-      <article class="note-card"><p>I’m a whole lot stronger than my worries try to make me feel.</p></article>
-      <article class="note-card"><p>Hatred and grudges are a fool’s gold.</p></article>
-      <article class="note-card"><p>1 Peter 4:9-10</p></article>
-      <article class="note-card"><p>“But above all, my brothers, do not swear, either by heaven or by earth or by any other oath, but let your “yes” be yes and your “no” be no, so that you may not fall under condemnation.”</p></article>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <p>© Bible Notes. All rights reserved.</p>
-</footer>
-
-<script>
-  const menuButton = document.getElementById('menuButton');
-  const sideNav = document.getElementById('sideNav');
-  const overlay = document.getElementById('overlay');
-  const navLinks = document.querySelectorAll('.nav-link');
-  const homeLinks = document.querySelectorAll('.home-link');
-  const panels = document.querySelectorAll('.tab-panel');
-
-  function toggleMenu() {
-    const isOpen = sideNav.classList.toggle('open');
-    overlay.classList.toggle('show', isOpen);
-    menuButton.setAttribute('aria-expanded', isOpen);
-  }
-
-  function closeMenu() {
-    sideNav.classList.remove('open');
-    overlay.classList.remove('show');
-    menuButton.setAttribute('aria-expanded', 'false');
-  }
-
-  function showTab(targetId) {
-    panels.forEach(panel => {
-      panel.classList.toggle('active', panel.id === targetId);
-    });
-
-    navLinks.forEach(link => {
-      link.classList.toggle('active', link.getAttribute('data-target') === targetId);
-    });
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    closeMenu();
-  }
-
-  menuButton.addEventListener('click', toggleMenu);
-  overlay.addEventListener('click', closeMenu);
-
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      const target = link.getAttribute('data-target');
-      showTab(target);
-    });
-  });
-
-  homeLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const target = link.getAttribute('data-target');
-      showTab(target);
-    });
-  });
-</script>
-</body>
-</html>
